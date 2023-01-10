@@ -1,0 +1,203 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jan  6 18:32:19 2023
+
+@author: owenjames
+"""
+import geopandas as gpd
+from geopandas import GeoSeries, GeoDataFrame
+import pandas as pd
+
+import os 
+
+import scipy
+from scipy.spatial import ConvexHull, convex_hull_plot_2d
+from scipy.spatial.distance import cdist, pdist
+
+import statsmodels.api as sm
+
+import numpy as np
+
+import shapely
+from shapely.geometry import Point, MultiPoint
+from shapely.ops import nearest_points
+
+import sklearn
+from sklearn import preprocessing
+from sklearn import linear_model
+from sklearn.linear_model import LinearRegression 
+from sklearn.metrics import r2_score, mean_squared_error
+
+import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.colors import LinearSegmentedColormap
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.lines import Line2D
+
+import contextily as ctx
+
+import pyproj
+
+import time
+
+import datetime
+from datetime import datetime, timezone
+
+import geopy.distance
+ 
+import pickle
+
+import sys
+
+import Config
+
+
+def endpointrate(intersectednew, CRS, ellipsoidal):
+                    val = min(intersectednew['TR_ID'])
+                    eprdic = {}
+                    for ids in intersectednew['TR_ID']:
+                        if ids == val:            
+                            s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
+                                              # print(s.columns)
+                            newestdate = max(s['layer'])
+                            oldestdate = min(s['layer'])
+                            newestdatedate = datetime(year=int(newestdate[0:4]), month=int(newestdate[4:6]), day = int(1))
+                            oldestdatedate = datetime(year=int(oldestdate[0:4]), month=int(oldestdate[4:6]), day = int(1))
+                            
+                            transy = np.array(s['Y'])
+                            transx = np.array(s['X'])
+                             
+                                              
+                            for i in s['layer']:
+                                if i == oldestdate:
+                                    oldgeoms = s.loc[s['layer']==i]
+                                    olddategeomsx = np.array(oldgeoms['geometry_x'].x)
+                                    olddategeomsy = np.array(oldgeoms['geometry_x'].y)
+                                    
+                                    # oldlowgeomx = np.array(oldgeoms['geometry_lower'].x)
+                                    # oldlowgeomy = np.array(oldgeoms['geometry_lower'].y)
+                                    
+                                    # oldhighgeomx = np.array(oldgeoms['geometry_higher'].x)
+                                    # oldhighgeomy = np.array(oldgeoms['geometry_higher'].y)
+                                    continue
+                                          
+                            for i in s['layer']:
+                                if i == newestdate:
+                                    newgeoms = s.loc[s['layer']==i]
+                                    newdategeomsx = np.array(newgeoms['geometry_x'].x)
+                                    newdategeomsy = np.array(newgeoms['geometry_x'].y)
+                                    
+                                    # newlowgeomx = np.array(newgeoms['geometry_lower'].x)
+                                    # newlowgeomy = np.array(newgeoms['geometry_lower'].y)
+                                    
+                                    # newhighgeomx = np.array(newgeoms['geometry_higher'].x)
+                                    # newhighgeomy = np.array(newgeoms['geometry_higher'].y)
+                                    
+                                    continue
+                                
+                            transgeoms = np.vstack((transx, transy)).T
+                            newdatedatageoms = np.vstack((newdategeomsx,newdategeomsy)).T
+                            olddatedatageoms = np.vstack((olddategeomsx,olddategeomsy)).T
+                            
+                            
+                            # newdatelowgeoms = np.vstack((newlowgeomx, newlowgeomy)).T
+                            # olddatelowgeoms = np.vstack((oldlowgeomx, oldlowgeomy)).T
+                            
+                            # newdatehighgeoms = np.vstack((newhighgeomx, newhighgeomy)).T
+                            # olddatehighgeoms = np.vstack((oldhighgeomx, oldhighgeomy)).T
+                            
+                            
+                            
+                            ###EPR Calculation
+                            distancesbetweendates = cdist(newdatedatageoms, olddatedatageoms, 'euclidean')
+                            
+                            # distancesbetweendatelow = cdist(newdatelowgeoms,  olddatelowgeoms, 'euclidean')
+                            
+                            # distancesbetweendatehigh = cdist(newdatehighgeoms, olddatehighgeoms, 'euclidean') 
+                            
+                            ####this section is to allow the chosen CRS nad ellipsoid to be defined when measuring distance. 
+                            gpdfirst, gpdsecond = pd.DataFrame({'x':[newdatedatageoms[0,0]],'y':[newdatedatageoms[0,1]]}, columns = ['x','y']), pd.DataFrame({'x':[olddatedatageoms[0,0]],'y':[olddatedatageoms[0,1]]}, columns = ['x','y'])
+                            firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = 4326)
+                            seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = 4326) 
+                            # print(firstdata['geometry'], seconddata['geometry'])
+                            firstdata = firstdata.to_crs(CRS)
+                            seconddata = seconddata.to_crs(CRS)
+                
+                            coordinate1 = (np.array(firstdata['geometry'].x), np.array(firstdata['geometry'].y))
+                            coordinate2 = (np.array(seconddata['geometry'].x), np.array(seconddata['geometry'].y))
+                            distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m                           
+                            
+                            
+                            timediff = pd.Series(newestdatedate - oldestdatedate)/pd.to_timedelta(1, unit='D')
+                            
+                            # print()
+                            ##divide by 365.25 days in a year to prodcue years between shores as a float
+                            eprresult = distances/(timediff[0]/365.25)
+                            print(eprresult)
+                            
+                            # eprresultpos = distancesbetweendatelow/(timediff[0]/365.25)
+                            # eprresultneg = distancesbetweendatehigh/(timediff[0]/365.25)
+                            # print(-abs(eprresult[0][0]))
+                                               # print(mindatedatageoms[0])
+                                               
+                            ##distance to transects (allows a +/- to be given to EPR Calculation)
+                            distanceold = cdist(olddatedatageoms, transgeoms, 'euclidean')
+                            distancenew = cdist(newdatedatageoms, transgeoms, 'euclidean')
+
+                            
+                            if distanceold[0][0] < distancenew[0][0]:
+                                eprresult = -abs(eprresult)
+                                # eprresultpos = -abs(eprresultpos[0][0])
+                                # eprresultneg = -abs(eprresultneg[0][0])
+                                # print(eprresultneg)
+                                
+                            else:
+                                eprresult = eprresult
+                                # eprresultpos = eprresultpos[0][0]
+                                # eprresultneg = eprresultneg[0][0]
+                                # print(eprresultneg)
+                                
+                                
+                            # print(eprresult)
+                            maxs = np.max(distancesbetweendates)
+                            location = np.where(distancesbetweendates == maxs)                 
+                            eprdic[ids]= { 'oldest date coords': olddatedatageoms[location[1]],'oldest date':oldestdatedate,'EPR':eprresult, 
+                                          # 'EPRerrneg':eprresultneg,'EPRerrpos':eprresultpos, /
+                                          'Transect':ids,'newest date coords':newdatedatageoms[location[0]], 
+                                          'newset date': newestdatedate,  'distance': maxs}               
+                            val = val+1
+                    
+                    eprvals= []
+                    eprerrpos = []
+                    eprerrneg = []
+                    transects = []
+                    for e, i in eprdic.items():
+                        transects.append(e)
+                        # print(e)
+                        eprvals.append(i['EPR'])
+                        # eprerrpos.append(i['EPRerrpos'])
+                        # eprerrneg.append(i['EPRerrneg'])
+                        # print(eprerrneg,eprerrpos)
+                    
+                    # transects.reverse() ###To get transects going from south to north!
+                    
+                    fig = plt.figure(figsize=(5,15))
+                    ax = fig.add_subplot(111)
+                    ax.plot(eprvals,transects)
+                    # eprnegs, transects,eprerrpos,transects
+                    # plt.fill_between(eprvals,eprerrneg, eprerrpos, facecolor='blue')
+                    plt.grid()
+                    ax.set_ylabel('Transect Number', fontsize = 12)
+                    ax.set_xlabel('EPR Rate (m/yr)', fontsize=12)
+                    
+                    plt.show()
+                    fig.savefig(Config.save_to_path+'End Point Rate.png')
+
+                    print("\nMaximum End Point Rate (Accretion): \n", max(eprvals))
+                    print("\nMinimum End Point Rate (Erosion) : \n", min(eprvals))
+                    with open (Config.save_to_path+'/eprresults.pkl', 'wb') as fb:
+                        pickle.dump(eprdic, fb, protocol = pickle.HIGHEST_PROTOCOL)
