@@ -58,7 +58,32 @@ import sys
 import Config 
 
 
-def netshorelinemovement(intersectednew, CRS, ellipsoidal):
+def netshorelinemovement(intersectednew):
+               """
+               Measures and identifies the maximum distances between the oldest and newest
+               dates and plots the results with distance alligned color bar and returns rates
+               for each transect. 
+            
+               Parameters
+               ----------
+               intersectednew : Pandas GeoDataFrame
+                   Geodataframe containing 'TR_ID' field of transect numbers, 'Year' field 
+                   with YYYYMM values, 'geometry_x' field of each  shorlein intersection.
+                   point. 
+               CRS : Integer Variable
+                    Coordinate reference system to be used. 
+               ellipsoidal : String Variable
+                    Ellipsoid type to be used in distance measurements. 
+            
+               Returns
+               -------
+               nsmdic: Dictionary
+                   Dictionary of Net Shoreline Movement distances and associated coordinates, 
+                   dictionary keys as the transect numbers.
+                    
+                
+            
+               """
                coordx = []
                coordy = []
                transects = []
@@ -67,8 +92,11 @@ def netshorelinemovement(intersectednew, CRS, ellipsoidal):
                trid=[]
                val = min(intersectednew['TR_ID'])
                nsmdic = {}
-               for ids in intersectednew['TR_ID']:
-                      if ids == val:            
+               uniquetrans = intersectednew.TR_ID.unique()
+
+               for e, ids in enumerate(uniquetrans):
+                        # print(ids)
+                       if val == e:             
                           s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
                           # print(s.columns)ko
                           newestdate = max(s['layer'])
@@ -97,12 +125,12 @@ def netshorelinemovement(intersectednew, CRS, ellipsoidal):
                           firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = 4326)
                           seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = 4326) 
                           print(firstdata['geometry'], seconddata['geometry'])
-                          firstdata = firstdata.to_crs(CRS)
-                          seconddata = seconddata.to_crs(CRS)
+                          firstdata = firstdata.to_crs(Config.CRS)
+                          seconddata = seconddata.to_crs(Config.CRS)
                 
                           coordinate1 = (np.array(firstdata['geometry'].x), np.array(firstdata['geometry'].y))
                           coordinate2 = (np.array(seconddata['geometry'].x), np.array(seconddata['geometry'].y))
-                          distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m
+                          distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = Config.ellipsoidal).m
                            
                           
                             
@@ -146,3 +174,5 @@ def netshorelinemovement(intersectednew, CRS, ellipsoidal):
 
                with open (Config.save_to_path+'/nsm.pkl', 'wb') as fb:
                    pickle.dump(nsmdic, fb, protocol = pickle.HIGHEST_PROTOCOL)
+            
+               return (nsmdic, min(distances1), max(distances1)) 

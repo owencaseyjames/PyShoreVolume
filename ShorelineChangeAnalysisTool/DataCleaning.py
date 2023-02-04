@@ -12,7 +12,7 @@ import geopandas as gpd
 from geopandas import GeoSeries, GeoDataFrame
 import pandas as pd
 
-import os
+import os 
 
 import scipy
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
@@ -29,7 +29,7 @@ from shapely.ops import nearest_points
 import sklearn
 from sklearn import preprocessing
 from sklearn import linear_model
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression 
 from sklearn.metrics import r2_score, mean_squared_error
 
 import seaborn as sns
@@ -59,34 +59,45 @@ import pickle
 
 
 def cleaning(intersected):
-    '''
-    This is a data cleaning function....
-
-    Args:
-        intersected: this does things
-
-    Returns:
-        The return value. True for success, False otherwise.
-
-    '''
+        """
+        Data cleaning protocol to remove duplicate intersections of the same year
+        along the same transect only keeping one that is closest to the seaward 
+        side from the intersections with no 'layer' value. 
+    
+        Parameters
+        ----------
+        intersected : Pandas GeoDataframe
+            Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
+            with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
+            and 'geometry_y' of each transect starting location. 
+            
+    
+        Returns
+        -------
+        intersectednew : Pandas GeoDataFrame
+            Geodataframe that only contains the closet intersect to the shoreline from 
+            that date, with all other intesects removed. Also removes any intersection
+            point that do not have a value in the 'layer' column to identify their date.
+        """
+    
+        intersected = intersected.sort_values(by=['TR_ID'])
         val = int(min(intersected['TR_ID']))
         listy = []
-        median = intersected['Z'].median()
-        # print(median)
+
         dicty = {}
-        for ids in intersected['TR_ID']:
-            if val == ids:
+        for ids in range(0,max(intersected['TR_ID'])):
+                # if val == ids: 
                 # print(ids)
                 s = GeoDataFrame(intersected.loc[intersected['TR_ID'] == ids])
-                s = s.loc[s['Z']== median]
+                # s = s.loc[s['Z']== median]
                 s = s.set_geometry('geometry_x').to_crs(epsg=3857)
                 ##tr - transect geometry point
                 tr = s
                 tr = tr.set_geometry('geometry_y')
                 uniquelayer = s['layer'].drop_duplicates()
-
+        
          ####Iterate through the available years taking the intersect closest to baseline first
-
+        
                 for i in uniquelayer:
                     yeardrop = s.loc[s['layer']==i]
                     trs = tr.iloc[0]
@@ -96,13 +107,14 @@ def cleaning(intersected):
                     gdf1 = gdf1.T
                     dicty = {}
                     dicty.update(gdf1)
-                    listy.append(dicty)
-                val = val + 1
-
+                    listy.append(dicty)     
+                
+        
         intersectednew = GeoDataFrame(listy)
-        intersectednew = intersectednew.set_geometry('geometry_x')
+        intersectednew = intersectednew.set_geometry('geometry_x') 
+        intersectednew = GeoDataFrame(intersectednew[~intersectednew['layer'].isnull()])
         return intersectednew
-        print(intersectednew)
+        print(len(intersectednew))
 
 
 
@@ -110,20 +122,20 @@ def cleaning(intersected):
 # vals = int(min(lowerranges['TR_ID']))
 # listlower = []
 # for ids in lowerranges['TR_ID']:
-#     if vals == ids:
+#     if vals == ids: 
 #         # print(ids)
 #         s = GeoDataFrame(lowerranges.loc[lowerranges['TR_ID'] == ids])
-
+                        
 #         #### find individual dates to use as the index
 #         uniquelayer = s['layer'].drop_duplicates()
-
+                
 #         #####iterate through the available years taking the closest to baseline first
 #         for i in uniquelayer:
 #                 #             ###find the index of the first year in this transect
 #                 indexes = s.loc[s['layer']==i].index[0]
 #                 # print(indexes['ID'])
 #                               ###Same for the upper and lower ranges
-#                 indexlow = lowerranges[lowerranges['layer']==i].index[0]
+#                 indexlow = lowerranges[lowerranges['layer']==i].index[0]    
 #                               # print(intersectednew.loc[indexes])
 #                 gdf1 = lowerranges.loc[indexes]
 #                 gdf1 = gdf1.T
@@ -142,14 +154,14 @@ def cleaning(intersected):
 # maxi = max(intersected['Z'])
 # # print(median)
 # for ids in intersected['TR_ID']:
-#     if val == ids:
+#     if val == ids: 
 #         # print(ids)
 #         s = GeoDataFrame(intersected.loc[intersected['TR_ID'] == ids])
 #         s = s.loc[s['Z']== maxi]
-
+        
 # #       ### find individual dates to use as the index
 #         uniquelayer = s['layer'].drop_duplicates()
-
+        
 
 # # #       ####iterate through the available years taking the closest to baseline first
 #         for i in uniquelayer:
@@ -166,7 +178,7 @@ def cleaning(intersected):
 #         val = val + 1
 # intersectedhigher = GeoDataFrame(listy)
 # intersectedhigher.rename(columns={'geometry_x':'geometry_higher','Z':'Z_higher'}, inplace=True)
-# intersectedhigher = intersectedhigher.set_geometry('geometry_higher')
+# intersectedhigher = intersectedhigher.set_geometry('geometry_higher') 
 # # print(intersectedhigher['Z'].max())
 # # print(intersectedhigher)
 

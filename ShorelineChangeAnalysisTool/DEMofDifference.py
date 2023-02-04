@@ -24,6 +24,7 @@ from scipy.spatial.distance import cdist, pdist
 
 import numpy as np
 
+
 import shapely
 from shapely.geometry import Point, MultiPoint, box
 from shapely.ops import nearest_points
@@ -55,7 +56,18 @@ import Config
 ################################################################
 
 def DEMofDifference():
-     
+        """
+        Identifies the masked DEM's in directory and iterates through them performing
+        Elevation models of difference. Allows DEM's of different sizes within the 
+        calculation by cropping the larger DEM to the size of the smaller then 
+        performing the calculation.
+        
+    
+        Returns
+        -------
+        Series of elevation dfference models along with model difference graphs. 
+    
+        """
         maskglobresults = [sorted(glob.glob(Config.path+"*masked.tif"))]
         num = (len(sorted(glob.glob(Config.path+"*masked.tif")))-1)
         print(num)
@@ -66,29 +78,61 @@ def DEMofDifference():
                     print(count)
                     older = rio.open(i[count])
                     newer = rio.open(i[count+1])
-                
-                      ##Get the dates for naming of files
+
+
                     date1 = (i[count][-16:-10])
                     date2 = (i[count+1][-16:-10])
+
+                    new = np.array(newer.read(1),dtype = rasterio.float32)             
+                    old = np.array(older.read(1),dtype = rasterio.float32)
+
             
-                      ##Create empty array of shape of newer raster
-                    x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
+                    if old.shape == new.shape: 
+                        
+                        ###MASK AND SUB FUNC
                     
-                    new= np.array(newer.read(1, masked = True))
-                    imagenewmask = np.ma.masked_where(new == -9999.0, new)
-                    old= np.array(older.read(1, masked = True))
-                    imageoldmask = np.ma.masked_where(old == -9999.0, old)
-                    print(new.shape, old.shape)
-                    print(new, old)
-                    print(imagenewmask, imageoldmask)
-                    print(date1,date2)
-                      ##Create a polygon out of the bounding box of the smaller polygon - clip the older one to this then
-                      ###perform the subtraction. 
-            
-                    if imagenewmask.shape == imageoldmask.shape: 
-                        x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
-                    elif imagenewmask.shape < imageoldmask.shape:
+                        x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
+
+                        imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
+                        imageoldmask = np.ma.array(old, mask = ((old == -9999.0)|(old == 0.0)))
+                        
+                        mask1 = np.ma.getmask(imagenewmask)
+                        mask2 = np.ma.getmask(imageoldmask)
+                    
+                        mask = np.logical_or(mask1,mask2)
+
+                        x = np.where(((imagenewmask != 0.0)&(imageoldmask != 0.0)), imagenewmask - imageoldmask, x)
+                        # x  = np.subtract(imagenewmask,imageoldmask)   
+                        x = np.ma.array(x, mask = (mask))
+                        
+                        out_meta = newer.meta
+                        with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
+                              dest.write(x.filled(fill_value = -9999.0), 1)
+                        # x = np.ma.array(x, mask=(mask))
+                        
+                        
+                        ###PLOT FUNC
+                        
+                        lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
+                        lidardem1 = np.array(lidardem.read(1))
+                        # print(lidardem1.max())
+                        lidardem1 = np.ma.array(lidardem1, mask=(mask))
+                        
+                        
+                        fig, ax = plt.subplots(1, figsize=(5,5)) 
+                  
+                        norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
+                        show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'DOD %s - %s' %(date1 , date2))
+                        cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
+                        plt.xticks(size = 5)
+                        plt.yticks(size = 5)
+                        plt.show()
+                        fig.savefig(Config.save_to_path+'/'+date1+date2+'DOD.png')
+                        # x = np.subtract(imagenewmask, imageoldmask)
+                    elif new.shape < old.shape:
+                          print('elif 1')
                           ## Use the bounding box of the newer raster - making shapefile to clip by
+                          
                           boundbox  = newer.bounds
                           geom = box(*boundbox)
                           df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
@@ -100,83 +144,127 @@ def DEMofDifference():
                         #     file = rio.open(i)
                         #     date = (i[-10:-4])
                             ###Clip older mask by newer shapefile
-                          out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True, all_touched = False, nodata = -9999)
-                          out_meta = older.meta
-                          print(out_image.shape[1]-1,out_image.shape[2])
-                          out_meta.update({'driver':'GTiff', 'height':out_image.shape[1] - 1,'width':out_image.shape[2],'transform':out_transform})
+                          out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True,  nodata = -9999.0)
+                          out_meta = newer.meta
+
+                          out_meta.update({'driver':'GTiff', 'height':newer.shape[0],'width':newer.shape[1],'transform':out_transform})
                           ###maybe change height according to new shape and old shape.
                             
                           with rio.open(Config.path+date1+date2+'bounding.tif','w', **out_meta) as dest:
                                   dest.crs = rasterio.crs.CRS.from_epsg(27700)
                                   dest.write(out_image)
                           olderimage = rio.open(Config.path+date1+date2+'bounding.tif')
-                          plt.figure(figsize=(5,5))    
-                          show((olderimage,1) , cmap='seismic',vmin = -8,vmax= 8, transform = lidardem.transform)
+
+                          old = np.array(olderimage.read(1),dtype = rasterio.float32)
+                          
+                          
+                          
+                          imagenewmask = np.ma.array(new, mask = (new == -9999.0))
+                          imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
+                          # imagenewmask = np.ma.masked_where((new == 0.0)&(new == -9999.0), new)
+                       
+                          imageoldmask = np.ma.array(old, mask = (old == -9999.0))
+                          imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
+
+                          
+                          mask1 = np.ma.getmask(imagenewmask)
+                          mask2 = np.ma.getmask(imageoldmask)
+                    
+                          mask = np.logical_or(mask1,mask2)
+                          
+                          x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
+
+                          x = np.where(((~imagenewmask.mask)&(~imageoldmask.mask)), imagenewmask - imageoldmask, x)
+                          x = np.ma.array(x, mask = (mask))
+                          with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
+                              dest.write(x.filled(fill_value = -9999.0), 1)
+                              
+                          lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
+                          
+                          lidardem1 = np.array(lidardem.read(1))
+     
+                          lidardem1 = np.ma.array(lidardem1, mask=(mask))
+                          fig, ax = plt.subplots(1, figsize=(5,5)) 
+                          
+                          
+                          norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
+                          show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'DOD %s - %s' %(date1 , date2))
+                          cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
+                          plt.xticks(size = 5)
+                          plt.yticks(size = 5)
                           plt.show()
-                          old = np.array(olderimage.read(1, masked = True))
-                          
-                          imageoldmask = np.ma.masked_where(old == -9999.0, old)
-                          print(imageoldmask)
-                          
-                          x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
-                          # x = np.subtract(new, old, where = new > -9999)
-                          x = np.ma.masked_where(x == -9999.0, x, copy = True)
-                          print(x[2000,1200], x[0,0])
-                          # x = np.ma.masked_where(xi > 9999.0, xi)
-                          print(x[2000,1200])
+                          fig.savefig(Config.save_to_path+'/'+date1+date2+'DOD.png')    
+
                             ##if newer shape is bigger than the older shape 
-                    elif imagenewmask.shape > imageoldmask.shape:    
+                    elif new.shape > old.shape:   
+                        
+                         
+                        
+                          print('elif2')
                             ##Older bounding box shape
-                          print(older.bounds)
+                          x = np.empty(older.read(1).shape, dtype = rasterio.float32)
+                          
                           boundbox  = older.bounds
                           geom = box(*boundbox)
                           df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
-                          df = df.to_crs(27700)
+                          df = df.set_crs(27700)
                           df.to_file(Config.path+'boundary.shp')
                           with fiona.open(Config.path+'boundary.shp','r') as shapefile:
                               shapes = [feature['geometry'] for feature in shapefile]
-                        #     file = rio.open(i)
-                        #     date = (i[-10:-4])
-                            ##Clip newer raster
-                          out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999)
+                              
+
+                          out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999.0)
+                          
                           out_meta = older.meta
-                          out_meta.update({'driver':'GTiff', 'height':out_image.shape[1],'width':out_image.shape[2],'transform':out_transform})
-                            
+
+                          out_meta.update({'driver':'GTiff', 'height':older.shape[0],'width':older.shape[1],'transform':out_transform})
+                       
                           with rio.open(Config.path+date1+date2+'bounding.tif','w', **out_meta) as dest:
                                   dest.crs = rasterio.crs.CRS.from_epsg(27700)
                                   dest.write(out_image)
+                                  
                           newerimage = rio.open(Config.path+date1+date2+'bounding.tif')
-                          new= newerimage.read(1, masked = True)
-                          imagenewmask = np.ma.masked_where(new == -9999, new)
-                          # print(imagenewmask)  
-                          x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
-                          # x = np.subtract(new, old, where = new > -9999)
-                          xmask = np.ma.masked_array(x, mask=(x == -9999))
-                          print(x, xmask)
+                          
+                          new = np.array(newerimage.read(1),dtype = rasterio.float32)
+                          
+                          imagenewmask = np.ma.array(new, mask = (new == -9999.0))
+                          imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
+
+                          imageoldmask = np.ma.array(old, mask = (old == -9999.0))
+                          imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
+
+                          # imageoldmask = np.ma.masked_where((old  == 0.0)&(old == -9999.0), old)
+                          mask1 = np.ma.getmask(imagenewmask)
+                          mask2 = np.ma.getmask(imageoldmask)
                     
-            
-                    ###TO TIFF
-                    print(newer.meta)
+                          mask = np.logical_or(mask1,mask2)
+
+                          x = np.where(((~imagenewmask.mask)&(~imageoldmask.mask)), imagenewmask - imageoldmask, x)
+
+                          x = np.ma.array(x, mask = (mask))
+
+                          with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
+                              dest.write(x.filled(fill_value = -9999.0), 1)    
+                          
+                          lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
+                          
+                          
+                          lidardem1 = np.array(lidardem.read(1))
+                          masky = lidardem.read_masks(1)
+
+                          lidardem1 = np.ma.array(lidardem1, mask=(mask))
+                          # print(lidardem1[2600,2600])
+                          fig, ax = plt.subplots(1, figsize=(5,5)) 
                     
-                    out_meta = newer.meta  
-                    out_meta.update({'crs':'EPSG:27700', 'transform':newer.transform,})
-                    # print(out_meta)
-                    with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
-                          dest.write(x, 1)          
+                          norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
+                          show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'DOD %s - %s' %(date1 , date2))
+                          cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
+                          plt.xticks(size = 5)
+                          plt.yticks(size = 5)
+                          plt.show()
+                          fig.savefig(Config.save_to_path+'/'+date1+date2+'DOD.png')
+
                     
-                    
-                    lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
-                    print(lidardem.transform)
-                    lidardem1 = np.ma.masked_where(lidardem.read(1) == -9999.0, lidardem.read(1), copy =True)
-                    fig, ax = plt.subplots(1, figsize=(5,5)) 
-                    
-                    norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
-                    show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'DOD %s - %s' %(date1 , date2))
-                    cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
-                    plt.xticks(size = 5)
-                    plt.yticks(size = 5)
-                    plt.show()
-                    fig.savefig(Config.save_to_path+'/'+date1+date2+'DOD.png')
             else:
                 break
     # except I

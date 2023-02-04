@@ -59,10 +59,30 @@ import pickle
 import sys
 
 
-
+##Number 1
 ###Add transect points to geodataframe (X AND Y are transect root coord from the linestring) Number 1
 ###If wrong way around the erosion and accretion values  will be the wrong way around. Baseline m
 def transectstartlocator(baseline, intersectednew):
+        """
+        Locates the starting coordinates of each transect and merges them into the 
+        into the intersection data frame.
+    
+        Parameters
+        ----------
+        baseline : Pandas GeoDataframe 
+            GeoDataframe of cross transects shapefile
+        intersectednew : Pandas GeoDataframe
+            Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
+            with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
+    
+        Returns
+        -------
+        intersected: Pandas GeoDatafame
+             Geodataframe of the intersect file with the correspondng coordinates of
+             the transect starting point on the seaward side in the fields 'X' and 'Y'.
+             Allows Erosion/Accretion rates to be measured in other functions.
+    
+        """
         x = []
         y = []
         trid = []
@@ -85,7 +105,26 @@ def transectstartlocator(baseline, intersectednew):
 
 ### Number 2
 ##If transect and thus baseline start locations are on the other sifde of the transect 
-def transectstartlocator2(baseline):
+def transectstartlocator2(baseline, intersectednew):
+        """
+        ocates the starting coordinates of each transect and merges them into the 
+        into the intersection data frame.
+        
+        Parameters
+        ----------
+        baseline : Pandas GeoDataframe 
+            GeoDataframe of cross transects shapefile
+        intersectednew : Pandas GeoDataframe
+            Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
+            with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
+    
+        Returns
+        -------
+        intersected: Pandas GeoDatafame
+             Geodataframe of the intersect file with the correspondng coordinates of
+             the transect starting point on the seaward side in the fields 'X' and 'Y'.
+             Allows Erosion/Accretion rates to be measured in other functions.
+        """
         x = []
         y = []
         trid = []

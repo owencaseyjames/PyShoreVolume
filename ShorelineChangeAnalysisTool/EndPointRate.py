@@ -53,18 +53,46 @@ import pickle
 
 import sys
 
+import math
+
 import Config
 
 
-def endpointrate(intersectednew, CRS, ellipsoidal):
+def endpointrate(intersectednew):
+                    """
+                    Measures the rates of accretion or erosion throughout time. 
+                
+                    Parameters
+                    ----------
+                    intersectednew : Pandas GeoDataFrame
+                        Geodataframe containing 'TR_ID' field of transect numbers, 'Year' field 
+                        with YYYYMM values, 'geometry_x' field of each  shorlein intersection.
+                        point. 
+                    CRS : Integer Variable
+                        Coordinate reference system to be used. 
+                    ellipsoidal : String Variable
+                        Ellipsoid type to be used in distance measurements. 
+                
+                        
+                    Returns
+                    -------
+                    eprdic: Dictionary
+                        Dictionary of End Point Rate calculations with transect number as key
+                        values, with associated coordinates of oldest and newest shore intersect.
+                
+                    """
                     val = min(intersectednew['TR_ID'])
                     eprdic = {}
-                    for ids in intersectednew['TR_ID']:
-                        if ids == val:            
+                    uniquetrans = intersectednew.TR_ID.unique()
+
+                    for e, ids in enumerate(uniquetrans): 
+                        if val == e:      
+
                             s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
-                                              # print(s.columns)
+                            # print(s['layer'])
                             newestdate = max(s['layer'])
                             oldestdate = min(s['layer'])
+
                             newestdatedate = datetime(year=int(newestdate[0:4]), month=int(newestdate[4:6]), day = int(1))
                             oldestdatedate = datetime(year=int(oldestdate[0:4]), month=int(oldestdate[4:6]), day = int(1))
                             
@@ -124,20 +152,25 @@ def endpointrate(intersectednew, CRS, ellipsoidal):
                             firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = 4326)
                             seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = 4326) 
                             # print(firstdata['geometry'], seconddata['geometry'])
-                            firstdata = firstdata.to_crs(CRS)
-                            seconddata = seconddata.to_crs(CRS)
+                            firstdata = firstdata.to_crs(Config.CRS)
+                            seconddata = seconddata.to_crs(Config.CRS)
                 
                             coordinate1 = (np.array(firstdata['geometry'].x), np.array(firstdata['geometry'].y))
                             coordinate2 = (np.array(seconddata['geometry'].x), np.array(seconddata['geometry'].y))
-                            distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m                           
+                            distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = Config.ellipsoidal).m                           
                             
                             
                             timediff = pd.Series(newestdatedate - oldestdatedate)/pd.to_timedelta(1, unit='D')
-                            
+                            print(timediff)
+                            timelength = timediff[0]/365.2425
+                            print(timelength)
+                            # print(timelength, distances)
                             # print()
                             ##divide by 365.25 days in a year to prodcue years between shores as a float
-                            eprresult = distances/(timediff[0]/365.25)
-                            print(eprresult)
+                            eprresult = distances/timelength
+                            eprerror = (math.sqrt((Config.measurementerror ** 2)+(Config.georeferencingerror ** 2)+(Config.distancemeasureerror ** 2)))/timelength
+                            eprerrorpos = eprresult+eprerror
+                            eprerrorneg = eprresult-eprerror
                             
                             # eprresultpos = distancesbetweendatelow/(timediff[0]/365.25)
                             # eprresultneg = distancesbetweendatehigh/(timediff[0]/365.25)
@@ -161,26 +194,38 @@ def endpointrate(intersectednew, CRS, ellipsoidal):
                                 # eprresultneg = eprresultneg[0][0]
                                 # print(eprresultneg)
                                 
-                                
+                            eprerrorpos = eprresult + eprerror
+                            eprerrorneg = eprresult - eprerror    
                             # print(eprresult)
                             maxs = np.max(distancesbetweendates)
                             location = np.where(distancesbetweendates == maxs)                 
-                            eprdic[ids]= { 'oldest date coords': olddatedatageoms[location[1]],'oldest date':oldestdatedate,'EPR':eprresult, 
-                                          # 'EPRerrneg':eprresultneg,'EPRerrpos':eprresultpos, /
+                            eprdic[val]= { 'oldest date coords': olddatedatageoms[location[1]],'oldest date':oldestdatedate,'EPR':eprresult, 
+                                           'EPRerrneg':eprerrorneg,'EPRerrpos':eprerrorpos, 
                                           'Transect':ids,'newest date coords':newdatedatageoms[location[0]], 
-                                          'newset date': newestdatedate,  'distance': maxs}               
-                            val = val+1
+                                          'newset date': newestdatedate,  'distance': maxs}    
+                            val = val + 1
+                            # continue
+                            
+                        # elif ids != val: 
+                        #     print('not true')
+                        #     print(val)
+                        # #     print(ids, val)
+                        #     val = val + 1
+                            
+                            
                     
+                            
+                            
                     eprvals= []
                     eprerrpos = []
-                    eprerrneg = []
+                    eprerrneg= []
                     transects = []
                     for e, i in eprdic.items():
                         transects.append(e)
-                        # print(e)
+                        print(e)
                         eprvals.append(i['EPR'])
-                        # eprerrpos.append(i['EPRerrpos'])
-                        # eprerrneg.append(i['EPRerrneg'])
+                        eprerrpos.append(i['EPRerrpos'])
+                        eprerrneg.append(i['EPRerrneg'])
                         # print(eprerrneg,eprerrpos)
                     
                     # transects.reverse() ###To get transects going from south to north!
@@ -188,6 +233,9 @@ def endpointrate(intersectednew, CRS, ellipsoidal):
                     fig = plt.figure(figsize=(5,15))
                     ax = fig.add_subplot(111)
                     ax.plot(eprvals,transects)
+                    ax.plot(eprerrpos, transects)
+                    ax.plot(eprerrneg, transects)
+                    
                     # eprnegs, transects,eprerrpos,transects
                     # plt.fill_between(eprvals,eprerrneg, eprerrpos, facecolor='blue')
                     plt.grid()
@@ -201,3 +249,7 @@ def endpointrate(intersectednew, CRS, ellipsoidal):
                     print("\nMinimum End Point Rate (Erosion) : \n", min(eprvals))
                     with open (Config.save_to_path+'/eprresults.pkl', 'wb') as fb:
                         pickle.dump(eprdic, fb, protocol = pickle.HIGHEST_PROTOCOL)
+                        
+                    return eprdic
+                        
+                                                
