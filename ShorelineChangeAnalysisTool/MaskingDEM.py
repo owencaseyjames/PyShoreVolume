@@ -15,50 +15,25 @@ Created on Sun Jan  8 09:33:45 2023
 #####                                                   ########
 ################################################################
 
-
 import rasterio as rio
 import rasterio.mask
-from rasterio.plot import show , show_hist
 
 import glob
 
 import fiona
-# import rioxarray
-
-import geopandas as gpd
-from geopandas import GeoSeries, GeoDataFrame
-import pandas as pd
-
-import os 
-import scipy
-from scipy.spatial.distance import cdist, pdist
-
-import numpy as np
-
-import shapely
-from shapely.geometry import Point, MultiPoint, box
-from shapely.ops import nearest_points
-
-import sklearn
-from sklearn import preprocessing
-
-import matplotlib
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.colors import LinearSegmentedColormap
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-
-import contextily as ctx
-
-import time
-
-import datetime
-from datetime import datetime
 
 import Config
 
-
 def masking():
+    """
+    Crops the DEM's using prior made vector shapefile and masks regions outside
+    of the desired area.
+
+    Returns
+    -------
+    Masked DEM's to be saved in the chosen directory. 
+
+    """
     with fiona.open(Config.path+'Volumepoly.shp','r') as shapefile:
         shapes = [feature['geometry'] for feature in shapefile]
     globresults = glob.glob(Config.path+"*.tif")
@@ -69,7 +44,8 @@ def masking():
     ###Apply mask and crop using shapefile
         out_image, out_transform = rasterio.mask.mask(file, shapes, crop=True, filled = True, nodata = -9999.0)
         out_meta = file.meta
-        out_meta.update({'driver':'GTiff', 'height':out_image.shape[1],'width':out_image.shape[2],'transform':out_transform})    
+        
+        out_meta.update({'driver':'GTiff', 'crs':'EPSG:27700','height':out_image.shape[1],'width':out_image.shape[2],'transform':out_transform, 'nodata':-9999.0})    
         with rio.open(Config.path+date+'masked.tif','w', **out_meta) as dest:
               dest.crs = rasterio.crs.CRS.from_epsg(27700)
               dest.write(out_image)          

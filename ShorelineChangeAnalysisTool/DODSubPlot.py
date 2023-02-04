@@ -7,51 +7,38 @@ Created on Sun Jan  8 11:28:07 2023
 """
 #DODSubPlot.py
 
+################################################################
+##########               DOD Sub Plots             #############
+##### Creates one subplot of DOD of Differnce Models    ########
+#####                                                   ########
+#####                                                   ########
+################################################################
+
+
 import rasterio as rio
 import rasterio.mask
-from rasterio.plot import show , show_hist
+from rasterio.plot import show
 
 import glob
 
-import fiona
-# import rioxarray
-
-import geopandas as gpd
-from geopandas import GeoSeries, GeoDataFrame
-import pandas as pd
-
-import os 
-import scipy
-from scipy.spatial.distance import cdist, pdist
-
 import numpy as np
-
-import shapely
-from shapely.geometry import Point, MultiPoint, box
-from shapely.ops import nearest_points
-
-import sklearn
-from sklearn import preprocessing
 
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from matplotlib.colors import LinearSegmentedColormap
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-
-import contextily as ctx
-
-import time
-
-import datetime
-from datetime import datetime
 
 import Config
 
-#####Subplotting the changes
-
-
 def DODSubPlot():
+    """
+    Creates one single subplot figure of all Digital Elevation Models of
+    Difference.
+
+    Returns
+    -------
+    Png subplot a combined subplot of elevation of difference models.
+
+    """
     multiple_rasters = [sorted(glob.glob(Config.path+'*DOD.tif'))]
     num = (len(sorted(glob.glob(Config.path+"*DOD.tif"))))
     nums = num -1
@@ -70,7 +57,11 @@ def DODSubPlot():
                 print(count+1, i)
                 older = rio.open(i[count])
                 oldy = older.read(1)
-                oldy = np.ma.masked_where(oldy== -9999, oldy)
+                # masky = older.read_maskS(1)
+                
+                oldy = np.ma.array(oldy, mask = (oldy == -9999.0))
+                print(oldy.min(), oldy.max())
+
                 ax = plt.subplot(num,2,count+1)
                 
                 norm = matplotlib.colors.TwoSlopeNorm(vmin = oldy.min(), vcenter = 0, vmax= oldy.max())

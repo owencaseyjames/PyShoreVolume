@@ -56,7 +56,27 @@ from datetime import datetime
 import Config
 
 
-def LimitofDetection():
+def LimitofDetection(CRS):
+        """
+        Produces elevation model of differences that exlcudes the measurement error
+        ranges from the remote sensing tool used to collate the data. Allows 
+        DEM's of different sizes within the calculation by cropping the larger 
+        DEM to the size of the smaller then performing the calculation.
+        
+    
+        Parameters
+        ----------
+        CRS : Integer
+            Coordinate Reference System code.
+    
+        Returns
+        -------
+        totals: Integer
+            Sum of all pixel values producing net elevation changes that are higher
+            than the error ranges that have been set. Also produces graphical output
+            of results.
+    
+        """
         num = (len(sorted(glob.glob(Config.path+"*masked.tif")))-1)
         print(num)
         maskglobresults = [sorted(glob.glob(Config.path+"*masked.tif"))]
@@ -68,17 +88,55 @@ def LimitofDetection():
         x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
                 
         new= newer.read(1, masked = True)
-        # new = new #* 0.01
-        imagenewmask = np.ma.masked_where(new == -9999, new)
         old= older.read(1, masked = True)
+        # new = new #* 0.01
+        # imagenewmask = np.ma.masked_where(new == -9999, new)
+        
         # old = old #* 0.01
-        imageoldmask = np.ma.masked_where(old == -9999, old)
-        print(imageoldmask)
-        if imagenewmask.shape == imageoldmask.shape: 
-            x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
+        # imageoldmask = np.ma.masked_where(old == -9999, old)
+
+        if new.shape == old.shape: 
+            
+            x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
+            imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
+            imageoldmask = np.ma.array(old, mask = ((old == -9999.0)|(old == 0.0)))
+            
+            mask1 = np.ma.getmask(imagenewmask)
+            mask2 = np.ma.getmask(imageoldmask)
+        
+            mask = np.logical_or(mask1,mask2)
+            
+            x = np.where(((imagenewmask != 0.0)&(imageoldmask != 0.0)), imagenewmask - imageoldmask, x)
+            x = np.ma.array(x, mask = (mask))
+            
+            out_meta = newer.meta
+            with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
+                  dest.write(x.filled(fill_value = -9999.0), 1)
+            # x = np.ma.array(x, mask=(mask))
+            
+            lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
+            lidardem1 = np.array(lidardem.read(1))
+            # print(lidardem1.max())
+            lidardem1 = np.ma.array(lidardem1, mask=(mask))
+            lidardem1 = np.ma.masked_array(lidardem1, mask=(lidardem1 == -9999)|(abs(Config.errors) < lidardem1)&(lidardem1 < Config.errors))
+            
+            
+            fig, ax = plt.subplots(1, figsize=(5,5))  
+            norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
+            show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'LOD %s - %s' %(date1 , date2))
+            cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
+            plt.xticks(size = 5)
+            plt.yticks(size = 5)
+            plt.show()
+            plt.savefig(Config.save_to_path+'/Limitofdetection.png')
+            show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
+
+            totals = np.sum(lidardem1)
+            print(totals)     
+            # x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
             # x = np.subtract(new, old, where = new > -9999)
-            xmask = np.ma.masked_array(x, mask=(x == -9999))
-        elif imagenewmask.shape < imageoldmask.shape:
+
+        elif new.shape < old.shape:
               ## Use the bounding box of the newer raster - making shapefile to clip by
               boundbox  = newer.bounds
               geom = box(*boundbox)
@@ -92,20 +150,52 @@ def LimitofDetection():
                 ###Clip older mask by newer shapefile
               out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True, nodata = -9999)
               out_meta = older.meta
-              out_meta.update({'driver':'GTiff', 'height':out_image.shape[1]-1,'width':out_image.shape[2],'transform':out_transform})
+              out_meta.update({'driver':'GTiff', 'height':newer.shape[0],'width':newer.shape[1],'transform':out_transform})
                 
               with rio.open(Config.path+date1+date2+'bounding.tif','w', **out_meta) as dest:
-                      dest.crs = rasterio.crs.CRS.from_epsg(4326)
+                      dest.crs = rasterio.crs.CRS.from_epsg(CRS)
                       dest.write(out_image)
               olderimage = rio.open(Config.path+date1+date2+'bounding.tif')
               old= olderimage.read(1, masked = True)
-              imageoldmask = np.ma.masked_where(old == -9999, old)
+              
+              imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
+              imageoldmask = np.ma.array(old, mask = ((old == -9999.0)|(old == 0.0)))
+                
+              mask1 = np.ma.getmask(imagenewmask)
+              mask2 = np.ma.getmask(imageoldmask)
+            
+              mask = np.logical_or(mask1,mask2)
+                
+              x = np.where(((imagenewmask != 0.0)&(imageoldmask != 0.0)), imagenewmask - imageoldmask, x)
+              x = np.ma.array(x, mask = (mask))
+                
+              out_meta = newer.meta
+              with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
+                      dest.write(x.filled(fill_value = -9999.0), 1)
+                # x = np.ma.array(x, mask=(mask))
+                
+              lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
+              lidardem1 = np.array(lidardem.read(1))
+                # print(lidardem1.max())
+              lidardem1 = np.ma.array(lidardem1, mask=(mask))
+              lidardem1 = np.ma.masked_array(lidardem1, mask=(lidardem1 == -9999)|(abs(Config.errors) < lidardem1)&(lidardem1 < Config.errors))
+                
+                
+              fig, ax = plt.subplots(1, figsize=(5,5))  
+              norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
+              show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform, title = 'LOD %s - %s' %(date1 , date2))
+              cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
+              plt.xticks(size = 5)
+              plt.yticks(size = 5)
+              plt.show()
+              plt.savefig(Config.save_to_path+'/Limitofdetection.png')
+              show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
+
+              totals = np.sum(lidardem1)
+              print(totals)     
         
-              x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
-              # x = np.subtract(new, old, where = new > -9999)
-              xmask = np.ma.masked_array(x, mask=(x == -9999))
                 ##if newer shape is bigger than the older shape 
-        elif imagenewmask.shape > imageoldmask.shape:    
+        elif new.shape > old.shape:    
                 ##Older bounding box shape
               print(older.bounds)
               boundbox  = older.bounds
@@ -120,43 +210,50 @@ def LimitofDetection():
                 ##Clip newer raster
               out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999)
               out_meta = older.meta
-              out_meta.update({'driver':'GTiff', 'height':out_image.shape[1],'width':out_image.shape[2],'transform':out_transform})
+              out_meta.update({'driver':'GTiff', 'height':older.shape[0],'width':older.shape[1],'transform':out_transform})
                 
               with rio.open(Config.path+date1+date2+'bounding.tif','w', **out_meta) as dest:
-                      dest.crs = rasterio.crs.CRS.from_epsg(4326)
+                      dest.crs = rasterio.crs.CRS.from_epsg(CRS)
                       dest.write(out_image)
               newerimage = rio.open(Config.path+date1+date2+'bounding.tif')
               new= newerimage.read(1, masked = True)
-              imagenewmask = np.ma.masked_where(new == -9999, new)
-              # print(imagenewmask)  
-              x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
-              # x = np.subtract(new, old, where = new > -9999)
-              xmask = np.ma.masked_array(x, mask=(x == -9999))
-              print(xmask)
+                            
+              imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
+              imageoldmask = np.ma.array(old, mask = ((old == -9999.0)|(old == 0.0)))
+                
+              mask1 = np.ma.getmask(imagenewmask)
+              mask2 = np.ma.getmask(imageoldmask)
+            
+              mask = np.logical_or(mask1,mask2)
+                
+              x = np.where(((imagenewmask != 0.0)&(imageoldmask != 0.0)), imagenewmask - imageoldmask, x)
+              x = np.ma.array(x, mask = (mask))
+                
+              out_meta = newer.meta
+              with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
+                      dest.write(x.filled(fill_value = -9999.0), 1)
+                # x = np.ma.array(x, mask=(mask))
+                
+              lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
+              lidardem1 = np.array(lidardem.read(1))
+                # print(lidardem1.max())
+              lidardem1 = np.ma.array(lidardem1, mask=(mask))
+              lidardem1 = np.ma.masked_array(lidardem1, mask=(lidardem1 == -9999)|(abs(Config.errors) < lidardem1)&(lidardem1 < Config.errors))
+                
+                
+              fig, ax = plt.subplots(1, figsize=(5,5))  
+              norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
+              show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'LOD %s - %s' %(date1 , date2))
+              cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
+              plt.xticks(size = 5)
+              plt.yticks(size = 5)
+              plt.show()
+              plt.savefig(Config.save_to_path+'/Limitofdetection.png')
+              show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
+
+              totals = np.sum(lidardem1)
+              print(totals)    
+              return totals
          
         # ##TO TIFF
-        print(x)
-        out_meta = newer.meta  
-        out_meta.update({'crs':'EPSG:4326', 'transform':newer.transform})
-        # print(out_meta)
-        with rio.open(Config.path+date1+date2+'DOD.tif','w',**out_meta) as dest:
-              dest.write(x,1)          
-        lidardem = rio.open(Config.path+date1+date2+'DOD.tif')
-        print(lidardem)
-        lidardem1 = lidardem.read(1)
-        lidardem1 = np.ma.masked_where(lidardem.read(1) == -9999.0, lidardem.read(1), copy =True)
-        lidardem1 = np.ma.masked_array(lidardem1, mask=(lidardem1 == -9999)|(-0.15 < lidardem1)&(lidardem1 < 0.15))
-        print(lidardem1)
-          ##Plot
-        fig, ax = plt.subplots(1, figsize=(5,5)) 
-        norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
-        show((lidardem1) , ax = ax, cmap='seismic_r',vmin = lidardem1.min(),vmax = lidardem1.max(),norm = norm, transform = lidardem.transform, title = 'LOD %s - %s' %(date1, date2))
-        cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
-        plt.savefig(Config.save_to_path+'/Limitofdetection.png')
-        plt.xticks(size = 5)
-        plt.yticks(size = 5)
-        plt.show()
-        totals = np.sum(lidardem1)
-        print(totals)
-        show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
-
+      

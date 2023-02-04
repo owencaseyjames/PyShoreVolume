@@ -17,6 +17,8 @@ from scipy.spatial.distance import cdist, pdist
 
 import statsmodels.api as sm
 
+from statistics import mean
+
 import numpy as np
 
 import shapely
@@ -56,7 +58,29 @@ import pickle
 
 import Config
 
-def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
+def netshorelinemovementerosionoracccretion(intersectednew):
+               """
+               Produces graphical output of Erosion and Accretion distances. 
+                
+               Parameters
+               ----------
+               intersectednew : Pandas GeoDataFrame
+                    Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
+                    with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
+                    and 'geometry_y' of each transect starting location. 
+               CRS : Integer Variable
+                    Coordinate reference system to be used. 
+               ellipsoidal : String Variable
+                    Ellipsoid type to be used in geo-distance measurements. 
+            
+               Returns
+               -------
+               nsmerrandacc : Dictionary
+                    Dictionary of Net Shoreline Erosion/Accretion distances with transect 
+                    ID number as key value, Newset and Oldest shoreline dates, coordinates 
+                    of each date.
+            
+               """
                val = min(intersectednew['TR_ID'])
                nsmdic = {}
                coordx=[]
@@ -67,8 +91,9 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                cols = []
                trid = []
                nsmerrandacc = {}
-               for ids in intersectednew['TR_ID']:
-                      if ids == val:            
+               uniquetrans = intersectednew.TR_ID.unique()
+               for e, ids in enumerate(uniquetrans):
+                      if val == e:            
                           s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
                           # print(s.columns)ko
                           newestdate = max(s['layer'])
@@ -114,11 +139,11 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                           tranold = GeoDataFrame(olddatedatadf, geometry = gpd.points_from_xy(olddatedatadf[0],olddatedatadf[1]), crs = 4326)
 
 
-                          firstdata = trannew.to_crs(CRS)
-                          seconddata = tranold.to_crs(CRS)
+                          firstdata = trannew.to_crs(Config.CRS)
+                          seconddata = tranold.to_crs(Config.CRS)
                           coordinate1 = (np.array(firstdata['geometry'].x), np.array(firstdata['geometry'].y))
                           coordinate2 = (np.array(seconddata['geometry'].x), np.array(seconddata['geometry'].y))
-                          distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m
+                          distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = Config.ellipsoidal).m
 
                           tranold = tranold.to_crs(3857)
                           trannew = trannew.to_crs(3857)
@@ -142,8 +167,8 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                           coordy.append(tranold['geometry'].y)
                           coordx.append(trannew['geometry'].x)
                           coordy.append(trannew['geometry'].y)
-                          distances1.append(maxs)
-                          distances1.append(maxs)
+                          distances1.append(distances)
+                          distances1.append(distances)
                           cols.append(col)
                           cols.append(col)
                           trid.append(ids)
@@ -175,4 +200,5 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                
                with open (Config.save_to_path+'/nsmerrandaccdic.pkl', 'wb') as fb:
                    pickle.dump(nsmerrandacc, fb, protocol = pickle.HIGHEST_PROTOCOL)       
-        
+                   
+               return nsmerrandacc
