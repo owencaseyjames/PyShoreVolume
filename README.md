@@ -1,8 +1,8 @@
 # PyShoreVolume
 
-A Python Package for semi automated object orientated shoreline change and beach volumetric change analysis. 
+A Python Package for shoreline change and beach volumetric change analysis. 
 
-
+#Functions 
 This package offers the ability to perform 5 Shoreline Change Analysis functions (EPR, NSM, SCE, Erosion and Accretion and Linear Regression Rate) from transect based shoreline intersection shapefiles. The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of shorleine change plotted on a satellite imagery. 
 
 ![shorleinechangeenvelope](https://user-images.githubusercontent.com/103570277/229756967-e0fdaede-57e7-4b3a-ba17-1da875539251.png)
