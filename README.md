@@ -47,7 +47,7 @@ intersected = Datacleaning.cleaning()
 Data Cleaning and Transect definition is designed to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file and remove any duplicate shoreline positions that may be found along the same transect. Create an object of this class with configurations set - CRS, Intersect data and transect data. There two transect locator functions - this is as the coordinates of the transect stating points can some time be read on the landward side. If this is the case then Erosion and Accretion  will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline.
 
 ```
-PORTH = SCA(ellipsoidal = 'WGS-84', save_to_path = save_to_path, transectplot = 10, CRS = 4326, origCRS = 27700, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
+PORTH = SCA(ellipsoidal = 'WGS-84', save_to_path = save_to_path, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
 
 Porthlrr = PORTH.LRR()
 PorthSCE = PORTH.SCE()
@@ -55,7 +55,7 @@ PorthEPR = PORTH.EPR()
 Porthnsm = PORTH.NSM()
 Porthnsmeanda = PORTH.NSMEandA()
 ```
-Set the configurations for the SCA analysis functions, taking 9 arguments to be set. The elliposdal model defines what ellipsoid will be used in the distance measurements (https://geopy.readthedocs.io/en/stable/#module-geopy.distance), this corresponds to the CRS measurement set. save_to_path is the path to the results folder created in the prior code segment. Transect plot defines how often the transect number is plotted on to the final figure. CRS is the Coordinate Reference System to be used to perform the distance measurements. The error parameters are used to define the error ranges in the EPR plot and calculations. Finally intersectednew is where the intersection geopandas database is added to  the model. 
+Set the configurations for the SCA analysis functions, taking 8 arguments to be set. The elliposdal model defines what ellipsoid will be used in the distance measurements (https://geopy.readthedocs.io/en/stable/#module-geopy.distance), this corresponds to the CRS measurement set. save_to_path is the path to the results folder created in the prior code segment. Transect plot defines how often the transect number is plotted on to the final figure. CRS is the Coordinate Reference System to be used to perform the distance measurements. The error parameters are used to define the error ranges in the EPR plot and calculations. Finally intersectednew is where the intersection geopandas database is added to  the model. 
 
 An instance of this class can the be created and named after the region under analysis. Each of the methods provide a graphical output and the output results dataframe can be saved as a variable in the Python Interface as well as getting automatically saved in the results folder. 
 
