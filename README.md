@@ -8,7 +8,7 @@ This package offers the ability to perform 5 Shoreline Change Analysis functions
 ![shorleinechangeenvelope](https://user-images.githubusercontent.com/103570277/229756967-e0fdaede-57e7-4b3a-ba17-1da875539251.png)
 ![netshorelinemovement](https://user-images.githubusercontent.com/103570277/229757084-0e69bb95-7892-4495-ae91-84460d1654c6.png)
 ![NetShorelineMovementErosionandAccretion](https://user-images.githubusercontent.com/103570277/229799392-d8049410-7d93-404c-8f60-df2c8784a27a.png)
-![End Point Rate](https://user-images.githubusercontent.com/103570277/229799462-eb4c512d-3f29-49fc-94b2-97af069c2000.png)
+
 
 The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates. In a coastal setting this can allow sediment volumes across the entire shore to measured. There are multiple functions that can be utilised:
 - DEMofDifference  - differences across each DEM in the time series order.
@@ -57,7 +57,7 @@ Porthnsmeanda = PORTH.NSMEandA()
 ```
 Set the configurations for the SCA analysis functions, taking 9 arguments to be set. The elliposdal model defines what ellipsoid will be used in the distance measurements (https://geopy.readthedocs.io/en/stable/#module-geopy.distance), this corresponds to the CRS measurement set. save_to_path is the path to the results folder created in the prior code segment. Transect plot defines how often the transect number is plotted on to the final figure. CRS is the Coordinate Reference System to be used to perform the distance measurements. The error parameters are used to define the error ranges in the EPR plot and calculations. Finally intersectednew is where the intersection geopandas database is added to  the model. 
 
-An instance of this class can the be created and named after the region under analysis. Each of the methods provide a grpahical output and the output results dataframe can be saved as a variable in the Python Interface as well as getting automatically saved in the results folder. 
+An instance of this class can the be created and named after the region under analysis. Each of the methods provide a graphical output and the output results dataframe can be saved as a variable in the Python Interface as well as getting automatically saved in the results folder. 
 
 ```
 PORTHDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
