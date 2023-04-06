@@ -13,13 +13,15 @@ This package offers the ability to perform 5 Shoreline Change Analysis functions
 The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates. In a coastal setting this can allow sediment volumes across the entire shore to measured. There are multiple functions that can be utilised:
 - DEMofDifference  - differences across each DEM in the time series order.
 - Seasonality - Identifies DEM's which were measured within the same season and performs DEMofDifference functions. 
-- Limit of Detection - Identifies the volumetric change rates after exlusion of measurement errors from the calculations
+- Limit of Detection - Identifies the volumetric change rates after exclusion of measurement errors from the calculations
 - Oldest to Newest - Produces a DEM of the Net Elevation differences between the Oldest DEM and the Neweset. 
 - Masking - Masks the DEMs using a polygon shapefile over the region of interests, setting no data values over pixel outside of this region. 
 
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
 
 # Usage 
+
+Datafile for input needs the following column naming conventions. Transect number - 'TR_ID', shoreline date - 'layer'. The transect file also requires the corresponding transect identification nubmbers under the column name 'TR_ID'. An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
 
 ```
 from SCA import SCA
@@ -28,13 +30,12 @@ from DataImportandTransectDefinition import DataImportandTransectDefinition
 import Geopandas and geopandas 
 
 intersectdata = geopandas.read_file(r'intersections.shp')
-baseline = gpd.read_file(r'transect.shp')
+baseline = geopandas.read_file(r'transect.shp')
 
 directory = 'results/'
 save_to_path = os.path.join(paths, directory)   
 os.makedirs(save_to_path, exist_ok = True)  
 ```
-
 Import transect and intersection shapefiles into a GeoPandas dataframe object and create a results folder. 
 
 ```
@@ -69,6 +70,10 @@ PORTHDOD.winterDOD()
 PORTHDOD.OldesttoNewest()
 PORTHDOD.NetVolumeChange()
 ```
+
+Configuration of the Digital Elevation Model of Difference functions takes 10 arguments. subplotcols defines number of columns in the subplot, titlesize adjusts the titlesize according matplotlib sizing conventions, pixelsize is the size of each pixel in m2, DODCRS the coordinate reference system given to the newly made DEM models, figurewidth and figureheight are plot dimensions sizes, path and save_to_path are the paths to the data directory folders and results folder repectively, MaskingCRS requires a Proj4 EPSG code and applies it to the masked DEM's meta data, measurement error is the error ranges of the elevation data to calcuate Limit of detection. 
+
+Again an instance of the class with these specifed parameters can be created. The masking method needs to be deployed prior any other method being used. The DEMofDifference and Seasonal methods need to be performed prior to any subplot method being used. The Oldest to Newest method also needs to be performed prior to the Net Volume Change method. 
 
 # Licence
 
