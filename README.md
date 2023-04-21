@@ -37,14 +37,20 @@ Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the s
 # Data Formatting and Processing Procedure
 
 For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not created within the QGIS environment. 
+<img align = 'left' width="33%" alt="Baseline" src="https://user-images.githubusercontent.com/103570277/233671156-7fe22018-2b71-4a69-82d6-d92e1960c293.png">
+<img align = 'center' width="33%" alt="Q Chainage" src="https://user-images.githubusercontent.com/103570277/233670294-563e0c85-6bd3-4453-b387-c6ddd61abdb1.png"> 
+<img align = 'right' width="33%" alt="Snap Geoms" src="https://user-images.githubusercontent.com/103570277/233671304-a56a5dc6-956e-4724-8720-389998667b23.png">
 
-<img align = 'left' width="33%" alt="Q Chainage" src="https://user-images.githubusercontent.com/103570277/233670294-563e0c85-6bd3-4453-b387-c6ddd61abdb1.png"> 1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
+1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
 2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
 3. Use the QChainage (QGIS Plugin) to create points along the baseline at a desired spacing. 
-4. Use the 'Snap Geometries to Layer' tool to assign the 'chain_baseline' points to the baseline. 
-5. Use the 'Transect' tool to set perpendicular transects along the new Snapped Geometry line. 
-6. Use 'Intersections' tool to create point file of intersections between Transects file and Merged Shoreline Shapefile. 
-7. Save both Intersection and Transect file. 
+
+
+
+5. Use the 'Snap Geometries to Layer' tool to assign the 'chain_baseline' points to the baseline. 
+6. Use the 'Transect' tool to set perpendicular transects along the new Snapped Geometry line. 
+7. Use 'Intersections' tool to create point file of intersections between Transects file and Merged Shoreline Shapefile. 
+8. Save both Intersection and Transect file. 
 
 
 An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
