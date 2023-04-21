@@ -52,8 +52,8 @@ For the functions to operate correctly two geodatabase files are needed: 1. Inte
 6. Use 'Intersections' tool to create point file of intersections between Transects file and Merged Shoreline Shapefile. 
 
 4. <img align = 'left' width="32%" alt="Snap Geoms" src="https://user-images.githubusercontent.com/103570277/233671304-a56a5dc6-956e-4724-8720-389998667b23.png"> 
-5. <img align = 'left width="32%" alt="Transect" src="https://user-images.githubusercontent.com/103570277/233673188-18ea963c-f780-4b47-a83b-ba730a1d3b9b.png">
-6. <img width="32%" alt="Intersection Process" src="https://user-images.githubusercontent.com/103570277/233673213-db17c1f2-d0d8-464e-990d-8de0fa9096c9.png">
+5. <img align = 'center' width="32%" alt="Transect" src="https://user-images.githubusercontent.com/103570277/233673188-18ea963c-f780-4b47-a83b-ba730a1d3b9b.png">
+6. <img align = 'right' width="32%" alt="Intersection Process" src="https://user-images.githubusercontent.com/103570277/233673213-db17c1f2-d0d8-464e-990d-8de0fa9096c9.png">
  
 7. Save both Intersection and Transect file. 
 7. <img width="32%" alt="Intersections" src="https://user-images.githubusercontent.com/103570277/233673250-6dacea21-1041-4cfd-9815-5d7f8b944be1.png">
