@@ -36,9 +36,9 @@ Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the s
 
 # Data Formatting and Processing Procedure
 
-For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification nubmbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not create within the QGIS environment. 
+For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not created within the QGIS environment. 
 
-1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
+<img align = 'left' width="33%" alt="Q Chainage" src="https://user-images.githubusercontent.com/103570277/233670294-563e0c85-6bd3-4453-b387-c6ddd61abdb1.png"> 1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
 2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
 3. Use the QChainage (QGIS Plugin) to create points along the baseline at a desired spacing. 
 4. Use the 'Snap Geometries to Layer' tool to assign the 'chain_baseline' points to the baseline. 
