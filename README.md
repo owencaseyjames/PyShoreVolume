@@ -24,11 +24,9 @@ The volumetric change functions are performed on a time series of Digitial Eleva
 
 | Function | Description | Output |
 | --- | --- | --- |
-Masking | Crops the DEM’s using prior made vector shapefile and masks regions outside of the desired area to set data value. |
-Masked DEM’s saved in the chosen directory with the name ’YYYYMMmasked.tif’ |
+Masking | Crops the DEM’s using prior made vector shapefile and masks regions outside of the desired area to set data value. | Masked DEM’s saved in the chosen directory with the name ’YYYYMMmasked.tif’ |
 DEM of Difference | Identifies the masked DEM’s in directory and iterates through them in order from youngest to oldest creating elevation models of difference. Allows DEM’s of different sizes within the calculation by cropping the larger DEM to the size of the smaller then performing the difference. | Series of elevation difference models along with model of difference graphs with color scale for change rates.|
-DOD Subplot | Creates one single subplot figure of all Digital Elevation Models of Difference created in the DEM of Difference function. |
-A combined subplot of elevation of difference models.|
+|DOD Subplot | Creates one single subplot figure of all Digital Elevation Models of Difference created in the DEM of Difference function. | A combined subplot of elevation of difference models.|
 Oldest to Newest | Creates a DEM of difference between the oldest DEM and Newest DEM providing elevation change rates across the entire period.| Digital Elevation Model of Difference with graphical production with color scale for elevation change rates. |
 |Net Volume Change | Applies the pixel size parameter to the elevation models to calculate volumetric changes using the Oldest to Newest DEMoD.| Volumetric changes within and outside of limits of detection. 
 Limit of Detection | Produces elevation model of differences that exlcudes the measurement error ranges from the remote sensing tool used to collate the data. | Sum of all pixel values producing net elevation changes that are higher than the error ranges that have been set. Also produces graphical output of results. |
