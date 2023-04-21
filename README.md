@@ -22,6 +22,8 @@ This package offers the ability to perform 5 Shoreline Change Analysis functions
 
 The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates. In a coastal setting this can allow sediment volumes across the entire shore to measured. The full range of functions are defined below. 
 
+| Function | Description | Output |
+| --- | --- | --- |
 Masking | Crops the DEM’s using prior made vector shapefile and masks regions outside of the desired area to set data value. |
 Masked DEM’s saved in the chosen directory with the name ’YYYYMMmasked.tif’ |
 DEM of Difference | Identifies the masked DEM’s in directory and iterates through them in order from youngest to oldest creating elevation models of difference. Allows DEM’s of different sizes within the calculation by cropping the larger DEM to the size of the smaller then performing the difference. | Series of elevation difference models along with model of difference graphs with color scale for change rates.|
