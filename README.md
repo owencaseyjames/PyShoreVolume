@@ -15,10 +15,10 @@ This package offers the ability to perform 5 Shoreline Change Analysis functions
 | --- | --- | --- |
 | End Point Rate | Rates of change between oldest and newest shore position divided by the length of time between the two. | Dictionary of EPR values per transect, graphical output of the EPR rates per transect, Pandas DataFrame of Statistics |
 |Linear Regression Rate| Fits a linear regression model to the change of each shoreline position along a given transect throughout time. Allows for regression statistics to be used to assess positional trend and the confidence levels of this trend. | Linear regression graphs
-per transect, Dictionary of Linear Regression statistics, Pandas DataFrame of Statistics. 
-Shoreline Change Envelope | Maximum distances found between any of the shorelines. |SCE with graphical output of SCE rates on top of satellite Imagery, Dictionary of SCE rates, Pandas DataFrame of Statistics.|
+per transect, Dictionary of Linear Regression statistics, Pandas DataFrame of Statistics. |
+| Shoreline Change Envelope | Maximum distances found between any of the shorelines. |SCE with graphical output of SCE rates on top of satellite Imagery, Dictionary of SCE rates, Pandas DataFrame of Statistics.|
 |Net Shoreline Movement | Net movement between the oldest shoreline position and most recent shoreline position. |NSM with graphical output of NSM rates on top of satellite Imagery, Dictionary of NSM rates, Pandas DataFrame of Statistics.|
-Net Shoreline Movement Erosion and Accretion | Net movement between the oldest shoreline position and most recent shoreline position with erosion and accretion trends being identified. | NSM with graphical output of NSM rates on top of satellite Imagery, Dictionary of NSMEandA
+|Net Shoreline Movement Erosion and Accretion | Net movement between the oldest shoreline position and most recent shoreline position with erosion and accretion trends being identified. | NSM with graphical output of NSM rates on top of satellite Imagery, Dictionary of NSMEandA
 rates, Pandas DataFrame of Statistics. |
 
 
