@@ -36,7 +36,7 @@ Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the s
 
 # Data Formatting, Processing and Function Parameters
 
-For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not created within the QGIS environment. 
+For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files produced in an alternate software. 
 
 1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
 2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
@@ -52,12 +52,16 @@ For the functions to operate correctly two geodatabase files are needed: 1. Inte
 5. Use the 'Transect' tool to set perpendicular transects along the new Snapped Geometry line. 
 6. Use 'Intersections' tool to create point file of intersections between Transects file and Merged Shoreline Shapefile. 
 
+<p align="center" width="100%">
 <img align = 'left' width="30%" alt="Snap Geoms" src="https://user-images.githubusercontent.com/103570277/233671304-a56a5dc6-956e-4724-8720-389998667b23.png"> 
 <img align = 'center' width="30%" alt="Transect" src="https://user-images.githubusercontent.com/103570277/233673188-18ea963c-f780-4b47-a83b-ba730a1d3b9b.png">
 <img align = 'right' width="30%" alt="Intersection Process" src="https://user-images.githubusercontent.com/103570277/233673213-db17c1f2-d0d8-464e-990d-8de0fa9096c9.png">
+ </p>
  
 7. Save both Intersection and Transect file. 
 <img width="32%" alt="Intersections" src="https://user-images.githubusercontent.com/103570277/233673250-6dacea21-1041-4cfd-9815-5d7f8b944be1.png">
+</p>
+
 
 An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
 
