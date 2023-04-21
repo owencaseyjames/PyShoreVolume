@@ -12,7 +12,7 @@ A Python Package for the production of shoreline change and volumetric change st
 This package offers the ability to perform 5 Shoreline Change Analysis functions (EPR, NSM, SCE, Erosion and Accretion and Linear Regression Rate) from transect based shoreline intersection shapefiles. The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
 
 | Function | Description | Output |
-| --- | --- |
+| --- | --- | --- |
 | End Point Rate | Rates of change between oldest and newest shore position divided by the length of time between the two. | Dictionary of EPR values per transect, graphical output of the EPR rates per transect, Pandas DataFrame of Statistics |
 |Linear Regression Rate| Fits a linear regression model to the change of each shoreline position along a given transect throughout time. Allows for regression statistics to be used to assess positional trend and the confidence levels of this trend. | Linear regression graphs
 per transect, Dictionary of Linear Regression statistics, Pandas DataFrame of Statistics. 
