@@ -34,7 +34,7 @@ Limit of Detection | Produces elevation model of differences that exlcudes the m
 Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the same season. It allows an assessment of the impacts that seasonal conditions may have over elevation and volumetric change rates. |Digital Elevation Model of Difference for DEM’s that share seasons with graphical production including color scale for elevation change rates.|
 
 
-# Data Formatting and Processing Procedure
+# Data Formatting, Processing and Function Parameters
 
 For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not created within the QGIS environment. 
 
