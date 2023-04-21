@@ -37,9 +37,9 @@ Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the s
 # Data Formatting and Processing Procedure
 
 For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not created within the QGIS environment. 
-<img align = 'left' width="33%" alt="Baseline" src="https://user-images.githubusercontent.com/103570277/233671156-7fe22018-2b71-4a69-82d6-d92e1960c293.png">
-<img align = 'center' width="33%" alt="Q Chainage" src="https://user-images.githubusercontent.com/103570277/233670294-563e0c85-6bd3-4453-b387-c6ddd61abdb1.png"> 
-<img align = 'right' width="33%" alt="Snap Geoms" src="https://user-images.githubusercontent.com/103570277/233671304-a56a5dc6-956e-4724-8720-389998667b23.png">
+<img align = 'left' width="32%" alt="Baseline" src="https://user-images.githubusercontent.com/103570277/233671156-7fe22018-2b71-4a69-82d6-d92e1960c293.png">
+<img align = 'center' width="32%" alt="Q Chainage" src="https://user-images.githubusercontent.com/103570277/233670294-563e0c85-6bd3-4453-b387-c6ddd61abdb1.png"> 
+<img align = 'right' width="32%" alt="Snap Geoms" src="https://user-images.githubusercontent.com/103570277/233671304-a56a5dc6-956e-4724-8720-389998667b23.png">
 
 1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
 2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
