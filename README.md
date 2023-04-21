@@ -58,11 +58,11 @@ For the functions to operate correctly two geodatabase files are needed: 1. Inte
 <img align = 'right' width="30%" alt="Intersection Process" src="https://user-images.githubusercontent.com/103570277/233673213-db17c1f2-d0d8-464e-990d-8de0fa9096c9.png">
  </p>
  
-7. Save both Intersection and Transect file. 
+7. Save both Intersection and Transect file to the desired directory. 
 <img width="32%" alt="Intersections" src="https://user-images.githubusercontent.com/103570277/233673250-6dacea21-1041-4cfd-9815-5d7f8b944be1.png">
 </p>
 
-
+For the DEM functions a single polygon shapefile is required to define the region under analysis. 
 An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
 
 # Usage
