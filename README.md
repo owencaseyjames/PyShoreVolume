@@ -33,9 +33,19 @@ Limit of Detection | Produces elevation model of differences that exlcudes the m
 Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the same season. It allows an assessment of the impacts that seasonal conditions may have over elevation and volumetric change rates. |Digital Elevation Model of Difference for DEM’s that share seasons with graphical production including color scale for elevation change rates.|
 
 
-# Usage 
+# Data Formatting and Processing Procedure. 
 
-Datafile for input needs the following column naming conventions. Transect number - 'TR_ID', shoreline date - 'layer'. The transect file also requires the corresponding transect identification nubmbers under the column name 'TR_ID'. An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
+For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification nubmbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not create within the QGIS environment. 
+
+
+
+
+
+
+
+
+
+An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
 
 ```
 from SCA import SCA
