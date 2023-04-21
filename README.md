@@ -9,6 +9,7 @@ A Python Package for the production of shoreline change and volumetric change st
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
 
 # Functions 
+
 This package offers the ability to perform 5 Shoreline Change Analysis functions (EPR, NSM, SCE, Erosion and Accretion and Linear Regression Rate) from transect based shoreline intersection shapefiles. The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
 
 | Function | Description | Output |
@@ -33,20 +34,22 @@ Limit of Detection | Produces elevation model of differences that exlcudes the m
 Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the same season. It allows an assessment of the impacts that seasonal conditions may have over elevation and volumetric change rates. |Digital Elevation Model of Difference for DEM’s that share seasons with graphical production including color scale for elevation change rates.|
 
 
-# Data Formatting and Processing Procedure. 
+# Data Formatting and Processing Procedure
 
 For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification nubmbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files not create within the QGIS environment. 
 
-
-
-
-
-
-
+1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
+2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
+3. Use the QChainage (QGIS Plugin) to create points along the baseline at a desired spacing. 
+4. Use the 'Snap Geometries to Layer' tool to assign the 'chain_baseline' points to the baseline. 
+5. Use the 'Transect' tool to set perpendicular transects along the new Snapped Geometry line. 
+6. Use 'Intersections' tool to create point file of intersections between Transects file and Merged Shoreline Shapefile. 
+7. Save both Intersection and Transect file. 
 
 
 An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
 
+# Usage
 ```
 from SCA import SCA
 from DOD import DOD
