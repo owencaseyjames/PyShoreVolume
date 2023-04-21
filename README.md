@@ -36,7 +36,7 @@ Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the s
 
 # Data Formatting, Processing and Function Parameters
 
-For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. The process below shows how to create these files in QGIS, however is possible to add these fields to files produced in an alternate software. 
+For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. These conventions are completed automatically in QGIS seen in the process below.
 
 1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
 2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
@@ -62,10 +62,15 @@ For the functions to operate correctly two geodatabase files are needed: 1. Inte
 <img width="32%" alt="Intersections" src="https://user-images.githubusercontent.com/103570277/233673250-6dacea21-1041-4cfd-9815-5d7f8b944be1.png">
 </p>
 
-For the DEM functions a single polygon shapefile is required to define the region under analysis. 
-An additional polygon shapefile that defines the coastal area to be analysed must be saved under name 'Volumepoly' in the data directory in order for the masking procedure to work. 
+For the DEM functions a single polygon shapefile is required to define the region under analysis and mask the DEM's to the set region in question. 
+
+The two groups of functions are callable in seperate classes 1. SCA 2. DOD. Each contain a set of variables to be defined for the functions to work.
+
+
+
 
 # Usage
+
 
 
 ```
