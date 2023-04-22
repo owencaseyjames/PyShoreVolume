@@ -76,7 +76,7 @@ Initial configuration of the dataset is required to add the coordinates of the s
 
 
 | Parameter | Description | Type | Further Reading | 
-|---|---|---| 
+|---|---|---|---|
 | Intersects | The cleaned and configured intersection file | GeoDataFrame| -
 | save_to_path | Path to the results folder | Pathname | -
 | transectplot | Sets the gap between the transect identification numbers on the plot | Integer | -
