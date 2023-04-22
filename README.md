@@ -137,9 +137,8 @@ PorthEPR = PORTH.EPR()
 Porthnsm = PORTH.NSM()
 Porthnsmeanda = PORTH.NSMEandA()
 ```
-Set the configurations for the SCA analysis functions, taking 8 arguments to be set. The elliposdal model defines what ellipsoid will be used in the distance measurements (https://geopy.readthedocs.io/en/stable/#module-geopy.distance), this corresponds to the CRS measurement set. save_to_path is the path to the results folder created in the prior code segment. Transect plot defines how often the transect number is plotted on to the final figure. CRS is the Coordinate Reference System to be used to perform the distance measurements. The error parameters are used to define the error ranges in the EPR plot and calculations. Finally intersectednew is where the intersection geopandas database is added to  the model. 
+Set the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Each of the methods provide a graphical output and the output results dataframe can be saved as a variable in the Python Interface as well as getting automatically saved in the results folder. 
 
-An instance of this class can the be created and named after the region under analysis. Each of the methods provide a graphical output and the output results dataframe can be saved as a variable in the Python Interface as well as getting automatically saved in the results folder. 
 
 ```
 PORTHDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
