@@ -10,7 +10,7 @@ A Python Package for the production of shoreline change and volumetric change st
 
 # Functions 
 
-This package offers the ability to perform 5 Shoreline Change Analysis functions (EPR, NSM, SCE, Erosion and Accretion and Linear Regression Rate) from transect based shoreline intersection shapefiles. The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
+This package offers the ability to perform 5 Shoreline Change Analysis functions from transect based shoreline intersection shapefiles. The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
 
 | Function | Description | Output |
 | --- | --- | --- |
@@ -34,9 +34,13 @@ Limit of Detection | Produces elevation model of differences that exlcudes the m
 Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the same season. It allows an assessment of the impacts that seasonal conditions may have over elevation and volumetric change rates. |Digital Elevation Model of Difference for DEM’s that share seasons with graphical production including color scale for elevation change rates.|
 
 
-# Data Formatting, Processing and Function Parameters
+# Data Formatting, Processing and Parameters
 
-For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. These conventions are completed automatically in QGIS seen in the process below.
+For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. These conventions are completed automatically in QGIS or added to data sets produced in an alternate system. 
+
+## QGIS Workflow Example
+
+Below is a workflow example within QGIS to produce the necessary data files for SCA analysis. 
 
 1. Process shoreline vectors form each available date and combine them into one 'Merge Shoreline' shapefile. 
 2. Create a 'baseline' polyline shapefile on the seaward side of the shorelines - use spline tool if curved baseline is desired. 
@@ -64,12 +68,18 @@ For the functions to operate correctly two geodatabase files are needed: 1. Inte
 
 For the DEM functions a single polygon shapefile is required to define the region under analysis and mask the DEM's to the set region in question. 
 
-The two groups of functions are callable in seperate classes 1. SCA 2. DOD. Each contain a set of variables to be defined for the functions to work.
+
+## Configuration and Function Parameters 
+
+Each set of functions are required to 
+Initial configuration of the dataset is required to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file, remove any duplicate shoreline contours found further along the transect and set up the results folder. The two groups of functions to perform the analysis are callable as seperate classes 1. SCA 2. DOD. Each contain a set of configuration parameters that need to be defined initially defined when creating an object of that class. 
 
 
+| Parameter | Purpose | Further Reading | 
+|---|---|---| 
+| Intersected |
 
-
-# Usage
+# Example
 
 
 
@@ -94,7 +104,7 @@ intersected = Datacleaning.transectstartlocator()
 intersected = Datacleaning.cleaning()
 ```
 
-Data Cleaning and Transect definition is designed to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file and remove any duplicate shoreline positions that may be found along the same transect. Create an object of this class with configurations set - CRS, Intersect data and transect data. There two transect locator functions - this is as the coordinates of the transect stating points can some time be read on the landward side. If this is the case then Erosion and Accretion  will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline.
+Data Cleaning and Transect definition is designed to  Create an object of this class with configurations set - CRS, Intersect data and transect data. There two transect locator functions - this is as the coordinates of the transect stating points can some time be read on the landward side. If this is the case then Erosion and Accretion  will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline.
 
 ```
 PORTH = SCA(ellipsoidal = 'WGS-84', save_to_path = save_to_path, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
