@@ -77,14 +77,14 @@ Initial configuration of the dataset is required to add the coordinates of the s
 
 | Parameter | Description | Type | Further Reading | 
 |---|---|---|---|
-| Intersects | The cleaned and configured intersection file | GeoDataFrame| -
-| save_to_path | Path to the results folder | Pathname | -
-| transectplot | Sets the gap between the transect identification numbers on the plot | Integer | -
+| Intersects | The cleaned and configured intersection file | GeoDataFrame| - |
+| save_to_path | Path to the results folder | Pathname | - |
+| transectplot | Sets the gap between the transect identification numbers on the plot | Integer | - |
 | CRS |  Sets the Coordinate Reference System of the geometries in the dataframe | Integer| https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html |
-| ellipsoidal | Ellipsoid model corresponding to the CRS set. Used in the GeoPy distance measurements.| String |https://geopy.readthedocs.io/en/stable/#module-geopy.distance 
-| measurementerror | Instrument error ranges (meters) - used in EPR function| Float or Integer | -
+| ellipsoidal | Ellipsoid model corresponding to the CRS set. Used in the GeoPy distance measurements.| String |https://geopy.readthedocs.io/en/stable/#module-geopy.distance |
+| measurementerror | Instrument error ranges (meters) - used in EPR function| Float or Integer | - |
 | georeferencingerror | Margin of error when georeferencnig an image or dataset - used in EPR function| Float or Integer | -
-| distancemeasurerror | Error in the distance calculation - a product of the CRS and Ellipsoid model used | https://geopy.readthedocs.io/en/stable/#module-geopy.distance 
+| distancemeasurerror | Error in the distance calculation - a product of the CRS and Ellipsoid model used | https://geopy.readthedocs.io/en/stable/#module-geopy.distance |
 
 # Example
 
