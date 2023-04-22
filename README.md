@@ -75,16 +75,16 @@ Each set of functions are required to
 Initial configuration of the dataset is required to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file, remove any duplicate shoreline contours found further along the transect and set up the results folder. The two groups of functions to perform the analysis are callable as seperate classes 1. SCA 2. DOD. Each contain a set of configuration parameters that need to be defined initially defined when creating an object of that class. 
 
 
-| Parameter | Description | Type | Further Reading | 
+| Parameter | Description | Type |
 |---|---|---|---|
-| Intersects | The cleaned and configured intersection file | GeoDataFrame| - |
-| save_to_path | Path to the results folder | Pathname | - |
-| transectplot | Sets the gap between the transect identification numbers on the plot | Integer | - |
-| CRS |  Sets the Coordinate Reference System of the geometries in the dataframe | Integer| https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html |
-| ellipsoidal | Ellipsoid model corresponding to the CRS set. Used in the GeoPy distance measurements.| String |https://geopy.readthedocs.io/en/stable/#module-geopy.distance |
-| measurementerror | Instrument error ranges (meters) - used in EPR function| Float or Integer | - |
-| georeferencingerror | Margin of error when georeferencnig an image or dataset - used in EPR function| Float or Integer | -
-| distancemeasurerror | Error in the distance calculation - a product of the CRS and Ellipsoid model used | https://geopy.readthedocs.io/en/stable/#module-geopy.distance |
+| Intersects | The cleaned and configured intersection file | GeoDataFrame|
+| save_to_path | Path to the results folder | Pathname | 
+| transectplot | Sets the gap between the transect identification numbers on the plot | Integer |
+| CRS |  Sets the Coordinate Reference System of the geometries in the dataframe | Integer| 
+| ellipsoidal | Ellipsoid model corresponding to the CRS set. Used in the GeoPy distance measurements.| String |
+| measurementerror | Instrument error ranges (meters) - used in EPR function| Float or Integer |
+| georeferencingerror | Margin of error when georeferencnig an image or dataset - used in EPR function| Float or Integer | 
+| distancemeasurerror | Error in the distance calculation - a product of the CRS and Ellipsoid model used |
 
 # Example
 
