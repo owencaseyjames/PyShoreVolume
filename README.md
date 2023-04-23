@@ -1,9 +1,11 @@
 # PyShoreVolume
 
 A Python Package for the production of shoreline change and volumetric change statistics with graphical and database outputs with a limited amount of pre-processing in QGIS. Designed for shoreline and coastal change, this package can be used for multiple puproses such as assessing glacial retreat and volumetric change rates, depostion and erosion within fluvial envrionments. 
-![shorleinechangeenvelope](https://user-images.githubusercontent.com/103570277/229756967-e0fdaede-57e7-4b3a-ba17-1da875539251.png)
-![netshorelinemovement](https://user-images.githubusercontent.com/103570277/229757084-0e69bb95-7892-4495-ae91-84460d1654c6.png)
-![NetShorelineMovementErosionandAccretion](https://user-images.githubusercontent.com/103570277/229799392-d8049410-7d93-404c-8f60-df2c8784a27a.png)
+
+
+![shorleinechangeenvelope](https://user-images.githubusercontent.com/103570277/233843191-e31f136f-fbd5-4c67-8a03-c62d0e4d4395.png)
+![NetShorelineMovementErosionandAccretion](https://user-images.githubusercontent.com/103570277/233843192-a7aff045-9732-4692-bd14-9c0cbdc726b0.png)
+![netshorelinemovement](https://user-images.githubusercontent.com/103570277/233843200-86b02f96-f35c-4d11-bc83-d7e3034af30c.png)
 
 
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
@@ -155,6 +157,10 @@ PORTHDOD.NetVolumeChange()
 Configuration of the Digital Elevation Model of Difference functions takes 10 arguments. subplotcols defines number of columns in the subplot, titlesize adjusts the titlesize according matplotlib sizing conventions, pixelsize is the size of each pixel in m2, DODCRS the coordinate reference system given to the newly made DEM models, figurewidth and figureheight are plot dimensions sizes, path and save_to_path are the paths to the data directory folders and results folder repectively, MaskingCRS requires a Proj4 EPSG code and applies it to the masked DEM's meta data, measurement error is the error ranges of the elevation data to calcuate Limit of detection. 
 
 Again an instance of the class with these specifed parameters can be created. The masking method needs to be deployed prior any other method being used. The DEMofDifference and Seasonal methods need to be performed prior to any subplot method being used. The Oldest to Newest method also needs to be performed prior to the Net Volume Change method. 
+
+# Support 
+
+Email: owen.james@kcl.ac.uk
 
 # Licence
 
