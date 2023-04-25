@@ -1,6 +1,6 @@
 # PyShoreVolume
 
-A Python Package for the production of shoreline change and volumetric change statistics with graphical and database outputs with a limited amount of pre-processing in QGIS. Designed for shoreline and coastal change, this package can be used for multiple puproses such as assessing glacial retreat and volumetric change rates, depostion and erosion within fluvial envrionments. 
+A Python Package for the production of shoreline and beach volumetric change statistics and map based graphical outputs. Designed for shoreline and coastal change, this package can be used for multiple environmental purposes where erosion and accretion rates need to be monitored. 
 
 <p align="center" width="100%">
 <img align = 'left' width="30%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
@@ -38,7 +38,7 @@ Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the s
 
 # Data Formatting, Processing and Parameters
 
-For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the points where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; Transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. These conventions are completed automatically in QGIS or added to data sets produced in an alternate system. 
+For the functions to operate correctly two geodatabase files are needed: 1. Intersections and 2. Transects. The intersection files are the point geometries where the the transect intersects the merged shoreline vector file. The intersection file requires 2 fields with the following field naming conventions; transect number - 'TR_ID' and shoreline date - 'layer', the data of both in integer format.  The transect file also requires the corresponding transect identification numbers under the field name 'TR_ID'. These conventions are completed automatically in QGIS or can be added to data sets produced in an alternate system. 
 
 ## QGIS Workflow Example
 
@@ -73,7 +73,6 @@ For the DEM functions a single polygon shapefile is required to define the regio
 
 ## Configuration and Function Parameters 
 
-Each set of functions are required to 
 Initial configuration of the dataset is required to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file, remove any duplicate shoreline contours found further along the transect and set up the results folder. The two groups of functions to perform the analysis are callable as seperate classes 1. SCA 2. DOD. Each contain a set of configuration parameters that need to be defined initially defined when creating an object of that class. 
 
 Shoreline Change Analysis Parameters 
@@ -104,8 +103,6 @@ DEM of Difference Parameters
 | measurementerror | Instrument error ranges (meters) | Float or Intger |
 
 # Example
-
-
 
 ```
 from SCA import SCA
