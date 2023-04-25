@@ -86,7 +86,7 @@ Shoreline Change Analysis Parameters
 | ellipsoidal | Ellipsoid model corresponding to the CRS set. Used in the GeoPy distance measurements.| String |
 | measurementerror | Instrument error ranges (meters) - used in EPR function| Float or Integer |
 | georeferencingerror | Margin of error when georeferencnig an image or dataset - used in EPR function| Float or Integer | 
-| distancemeasurerror | Error in the distance calculation - a product of the CRS and Ellipsoid model used |
+| distancemeasurerror | Error in the distance calculation - a product of the CRS and Ellipsoid model used | Float or Integer | 
 
 DEM of Difference Parameters 
 | Parameter | Description | Type |
