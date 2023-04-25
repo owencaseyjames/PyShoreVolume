@@ -100,7 +100,7 @@ DEM of Difference Parameters
 | figwidth | Width of the plot | Float or integer | 
 | figheight | Height of the plot | Float or integer | 
 | subplotcols | Number of columns to be used in the subplot | Integer | 
-| measurementerror | Instrument error ranges (meters) | Float or Intger |
+| measurementerror| Instrument error ranges (meters)| Float or Integer |
 
 # Example
 
