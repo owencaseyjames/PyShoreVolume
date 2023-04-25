@@ -2,10 +2,10 @@
 
 A Python Package for the production of shoreline change and volumetric change statistics with graphical and database outputs with a limited amount of pre-processing in QGIS. Designed for shoreline and coastal change, this package can be used for multiple puproses such as assessing glacial retreat and volumetric change rates, depostion and erosion within fluvial envrionments. 
 
-
-![shorleinechangeenvelope](https://user-images.githubusercontent.com/103570277/233843191-e31f136f-fbd5-4c67-8a03-c62d0e4d4395.png)
-![NetShorelineMovementErosionandAccretion](https://user-images.githubusercontent.com/103570277/233843192-a7aff045-9732-4692-bd14-9c0cbdc726b0.png)
-![netshorelinemovement](https://user-images.githubusercontent.com/103570277/233843200-86b02f96-f35c-4d11-bc83-d7e3034af30c.png)
+<p align="center" width="100%">
+<img align = 'left' width="30%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/233843191-e31f136f-fbd5-4c67-8a03-c62d0e4d4395.png">
+<img align = 'center' width="30%" alt="NSMEA" src ="https://user-images.githubusercontent.com/103570277/233843192-a7aff045-9732-4692-bd14-9c0cbdc726b0.png">
+<img align = 'right' width="30%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/233843200-86b02f96-f35c-4d11-bc83-d7e3034af30c.png">
 
 
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
