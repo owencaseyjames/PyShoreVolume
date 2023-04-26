@@ -73,7 +73,12 @@ For the DEM functions a single polygon shapefile is required to define the regio
 
 ## Configuration and Function Parameters 
 
-Initial configuration of the dataset is required to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file, remove any duplicate shoreline contours found further along the transect and set up the results folder. The two groups of functions to perform the analysis are callable as seperate classes 1. SCA and 2. DOD. Each contain a set of configuration parameters that need to be initially defined when creating an object of said class. 
+Initial configuration of the dataset is required to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file, remove any duplicate shoreline contours found further along the transect and set up the results folder. 
+
+There two transect locator functions - this is as the coordinates of the transect starting points can be misread as starting from the landward side. If this is the case then Erosion and Accretion  will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline.
+
+
+The two groups of functions to perform the analysis are callable as seperate classes 1. SCA and 2. DOD. Each contain a set of configuration parameters that need to be initially defined when creating an object of said class. 
 
 Shoreline Change Analysis Parameters 
 
@@ -103,32 +108,30 @@ DEM of Difference Parameters
 | measurementerror| Instrument error ranges (meters)| Float or Integer |
 
 # Example
+Import transect and intersection shapefiles into a GeoPandas dataframe.
 
 ```
 from SCA import SCA
 from DOD import DOD
 from DataImportandTransectDefinition import DataImportandTransectDefinition 
-import Geopandas and geopandas 
+import Geopandas as gpd
 
-intersectdata = geopandas.read_file(r'intersections.shp')
-baseline = geopandas.read_file(r'transect.shp')
-
-directory = 'results/'
-save_to_path = os.path.join(paths, directory)   
-os.makedirs(save_to_path, exist_ok = True)  
-```
-Import transect and intersection shapefiles into a GeoPandas dataframe object and create a results folder. 
+intersectdata = gpd.read_file(r'intersections.shp')
+baseline = gpd.read_file(r'transect.shp')
 
 ```
-Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersectdata, transects = baseline)
+Implement the transect definition - decide whether the transect locator one or two is need by assessing the shape of the transects. 
+
+```
+Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersectdata, transects = baseline, path = path)
 intersected = Datacleaning.transectstartlocator()
 intersected = Datacleaning.cleaning()
+results = Datacleaning.results()
 ```
-
-Data Cleaning and Transect definition is designed to  Create an object of this class with configurations set - CRS, Intersect data and transect data. There two transect locator functions - this is as the coordinates of the transect stating points can some time be read on the landward side. If this is the case then Erosion and Accretion  will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline.
+ 
 
 ```
-PORTH = SCA(ellipsoidal = 'WGS-84', save_to_path = save_to_path, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
+PORTH = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
 
 Porthlrr = PORTH.LRR()
 PorthSCE = PORTH.SCE()
