@@ -75,7 +75,7 @@ For the DEM functions a single polygon shapefile is required to define the regio
 
 Initial configuration of the dataset is required to add the coordinates of the starting point of the transects (from the seaward side) to the intersection file, remove any duplicate shoreline contours found further along the transect and set up the results folder. 
 
-There are two transect locator functions - this is as the coordinates of the transect starting points can be misread as starting from the landward side. If this is the case then Erosion and Accretion and End Point Rates will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline. This function also provides the option to add the eoreferencing and measurement errors to each date, passed to the functon in the form of a list from youngest to oldest. 
+There are two transect locator functions - this is as the coordinates of the transect starting points can be misread as starting from the landward side. If this is the case then Erosion and Accretion and End Point Rates will not be calculated correctly. If the transectstartlocator is incorrect, use the other option transectstartlocator2, both functions produce a plot of the coordinates which can be reviewed to see if correct coordinates are obtained. The cleaning function removes any duplicate intersections along each transect, keeping the one nearest to the seaward baseline. This function also provides the option to add the georeferencing and measurement errors to each shoreline date, passed to the function in the form of a list of errors from youngest to oldest. 
 
 | Parameter | Description | Type |
 |---|---|---|
@@ -129,10 +129,17 @@ baseline = gpd.read_file(r'transect.shp')
 Implement the transect definition - decide whether the transect locator one or two is need by assessing the shape of the transects. 
 
 ```
-Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersectdata, transects = baseline, path = path)
-intersected = Datacleaning.transectstartlocator1()
-intersected = Datacleaning.cleaning()
+#Georeferencing and measurment errors of each shoreline in meters. 
+georefs = [1, 0.8, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]
+measurement = [1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+
+
+Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersectdata, transects = baseline, path = path, georeferror=georefs, measurementerror=measurement)
+Datacleaning.transectstartlocator1()
+Datacleaning.cleaning()
+intersectednew = Datacleaning.errors()
 results = Datacleaning.results()
+
 ```
 
 Set the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. The output dataframes will be saved to the variable name of the users choosing.  
@@ -147,10 +154,14 @@ SauntonNSMEandA = Saunton.NSMEandA()
 Out:
 ```
 <p align="center" width="100%">
-<img align = 'left' width="30%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
-<img align = 'center' width="30%" alt="NSMEA" src ="https://user-images.githubusercontent.com/103570277/234302341-4163c9f1-296e-44bb-b2a5-a006be62587e.png">
-<img align = 'right' width="30%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
-</p>
+<img align = 'left' width="45%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
+<img align = 'right' width="45%" alt="NSMEA" src ="https://user-images.githubusercontent.com/103570277/234302341-4163c9f1-296e-44bb-b2a5-a006be62587e.png">
+ </p>
+ <p align="center" width="100%">
+<img align = 'left' width="45%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
+<img align = 'right' width="45%" alt="EPR" src = "https://user-images.githubusercontent.com/103570277/234678040-4eacbe74-497d-4dcd-9c95-f732a5c99aef.png">
+ </p>
+
 
  
 Set the configurations for the DOD analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. Note that subplots will only work if analysis method that been used 
