@@ -114,7 +114,7 @@ DEM of Difference Parameters
 | subplotcols | Number of columns to be used in the subplot | Integer | 
 | measurementerror| Instrument error ranges (meters)| Float or Integer |
 
-## Example
+## Usage
 
 Import transect and intersection shapefiles into a GeoPandas dataframe.
 
@@ -136,18 +136,23 @@ intersected = Datacleaning.transectstartlocator1()
 intersected = Datacleaning.cleaning()
 results = Datacleaning.results()
 ```
+
 Set the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. 
 
 ```
 Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
 
-SauntonLRR = Saunton.LRR()
 SauntonSCE = Saunton.SCE()
-SauntonEPR = Saunton.EPR()
-SauntonNSM = Saunton.NSM()
-SauntonNSMEandA = Saunton.NSMEandA()
-```
+Out:<p align="center" width="100%">
+<img align = 'left' width="30%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
 
+SauntonNSM = Saunton.NSM()
+Out: <img align = 'left' width="30%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
+
+SauntonNSMEandA = Saunton.NSMEandA()
+Out: <img align = 'left' width="30%" alt="NSMEA" src ="https://user-images.githubusercontent.com/103570277/234302341-4163c9f1-296e-44bb-b2a5-a006be62587e.png">
+
+```
 
 
 
