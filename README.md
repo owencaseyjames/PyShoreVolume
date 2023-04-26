@@ -159,7 +159,8 @@ Out:
  </p>
  <p align="center" width="100%">
 <img align = 'left' width="45%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
-<img align = 'right' width="45%" alt="EPR" src = "https://user-images.githubusercontent.com/103570277/234678957-fa86ea27-a717-44ef-83f5-e226d7be0887.png">
+<img align = 'right' width="45%" alt="EPR" src ="https://user-images.githubusercontent.com/103570277/234679311-1950f462-9864-4fc2-9853-6eaffde78bc6.png"
+ >
  </p>
 
 
