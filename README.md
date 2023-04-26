@@ -144,9 +144,7 @@ Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10,
 
 SauntonSCE = Saunton.SCE()
 Out:
-<p align="left" width="100%">
-<img align = 'left' width="30%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
-</p>
+![shorleinechangeenvelope](https://user-images.githubusercontent.com/103570277/234525278-c4208972-314b-4bbd-8897-e64f865115e6.png)
 
 SauntonNSM = Saunton.NSM()
 Out: 
