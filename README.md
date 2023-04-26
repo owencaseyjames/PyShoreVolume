@@ -29,11 +29,11 @@ The volumetric change functions are performed on a time series of Digitial Eleva
 | --- | --- | --- |
 Masking | Crops the DEM’s using prior made vector shapefile and masks regions outside of the desired area to set data value. | Masked DEM’s saved in the chosen directory with the name ’YYYYMMmasked.tif’ |
 DEM of Difference | Identifies the masked DEM’s in directory and iterates through them in order from youngest to oldest creating elevation models of difference. Allows DEM’s of different sizes within the calculation by cropping the larger DEM to the size of the smaller then performing the difference. | Series of elevation difference models along with model of difference graphs with color scale for change rates.|
-|DOD Subplot | Creates one single subplot figure of all Digital Elevation Models of Difference created in the DEM of Difference function. | A combined subplot of elevation of difference models.|
+|DOD Subplot | Creates one single subplot figure of all Digital Elevation Models of Difference created in the DEM of Difference function.| A combined subplot of elevation of difference models.|
 Oldest to Newest | Creates a DEM of difference between the oldest DEM and Newest DEM providing elevation change rates across the entire period.| Digital Elevation Model of Difference with graphical production with color scale for elevation change rates. |
 |Net Volume Change | Applies the pixel size parameter to the elevation models to calculate volumetric changes using the Oldest to Newest DEMoD.| Volumetric changes within and outside of limits of detection. 
 Limit of Detection | Produces elevation model of differences that exlcudes the measurement error ranges from the remote sensing tool used to collate the data. | Sum of all pixel values producing net elevation changes that are higher than the error ranges that have been set. Also produces graphical output of results. |
-Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the same season. It allows an assessment of the impacts that seasonal conditions may have over elevation and volumetric change rates. |Digital Elevation Model of Difference for DEM’s that share seasons with graphical production including color scale for elevation change rates.|
+Seasonal DOD | Allows user to perform analysis on DEM’s that fall within the same season. It allows an assessment of the impacts that seasonal conditions may have over elevation and volumetric change rates. |Digital Elevation Model of Difference for DEM’s that share seasons with graphical production including color scale for elevation change rates.| 
 
 
 # Data Formatting, Processing and Parameters
@@ -137,7 +137,7 @@ intersected = Datacleaning.cleaning()
 results = Datacleaning.results()
 ```
 
-Set the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. 
+Set the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. The output dataframes will be saved to the variable name of the users choosing.  
 
 ```
 Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
@@ -154,6 +154,8 @@ Out:
 <img align = 'right' width="30%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
 </p>
 
+ 
+Set the configurations for the DOD analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. Note that subplots will only work if analysis method that been used 
 
 ```
 SauntonDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
@@ -173,18 +175,15 @@ Out:
 -206586.4 (m3)
 +51846.69 (m3)
 ```
-
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
 
 
 ```
 SauntonWinter = SauntonDOD.winterDOD()
+SauntonDOD.DODwintersubplot()
 SauntonOldesttoNewest = SauntonDOD.OldesttoNewest()
 ```
 
-Configuration of the Digital Elevation Model of Difference functions takes 10 arguments. subplotcols defines number of columns in the subplot, titlesize adjusts the titlesize according matplotlib sizing conventions, pixelsize is the size of each pixel in m2, DODCRS the coordinate reference system given to the newly made DEM models, figurewidth and figureheight are plot dimensions sizes, path and save_to_path are the paths to the data directory folders and results folder repectively, MaskingCRS requires a Proj4 EPSG code and applies it to the masked DEM's meta data, measurement error is the error ranges of the elevation data to calcuate Limit of detection. 
-
-Again an instance of the class with these specifed parameters can be created. The masking method needs to be deployed prior any other method being used. The DEMofDifference and Seasonal methods need to be performed prior to any subplot method being used. The Oldest to Newest method also needs to be performed prior to the Net Volume Change method. 
 
 # Roadmap 
 
