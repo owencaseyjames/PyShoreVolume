@@ -114,7 +114,7 @@ DEM of Difference Parameters
 | subplotcols | Number of columns to be used in the subplot | Integer | 
 | measurementerror| Instrument error ranges (meters)| Float or Integer |
 
-# Example
+## Example
 
 Import transect and intersection shapefiles into a GeoPandas dataframe.
 
