@@ -154,6 +154,7 @@ Out:
 <img align = 'right' width="30%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
 </p>
 
+
 ```
 SauntonDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
 figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:4326', measurementerror = 0.15)
@@ -161,14 +162,23 @@ figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:43
 SauntonDOD.Masking()
 SauntonDEMoDResults = PORTHDOD.DEMofDifference()
 SauntonDOD.DODSubPlot()
+Out:
+```
+
+![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
+
+
+```
 SauntonWinter = SauntonDOD.winterDOD()
 SauntonOldesttoNewest = SauntonDOD.OldesttoNewest()
-SauntonDOD.NetVolumeChange()
 ```
 
 Configuration of the Digital Elevation Model of Difference functions takes 10 arguments. subplotcols defines number of columns in the subplot, titlesize adjusts the titlesize according matplotlib sizing conventions, pixelsize is the size of each pixel in m2, DODCRS the coordinate reference system given to the newly made DEM models, figurewidth and figureheight are plot dimensions sizes, path and save_to_path are the paths to the data directory folders and results folder repectively, MaskingCRS requires a Proj4 EPSG code and applies it to the masked DEM's meta data, measurement error is the error ranges of the elevation data to calcuate Limit of detection. 
 
 Again an instance of the class with these specifed parameters can be created. The masking method needs to be deployed prior any other method being used. The DEMofDifference and Seasonal methods need to be performed prior to any subplot method being used. The Oldest to Newest method also needs to be performed prior to the Net Volume Change method. 
+
+# Roadmap 
+
 
 # Support 
 
