@@ -163,6 +163,15 @@ SauntonDOD.Masking()
 SauntonDEMoDResults = PORTHDOD.DEMofDifference()
 SauntonDOD.DODSubPlot()
 Out:
+-567871.2 (m3)
++134494.33 (m3)
++4649.84 (m3)
++585515.3 (m3)
+-428963.16 (m3)
++39263.8 (m3)
++477597.22 (m3)
+-206586.4 (m3)
++51846.69 (m3)
 ```
 
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
