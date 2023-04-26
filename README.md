@@ -142,7 +142,7 @@ results = Datacleaning.results()
 
 ```
 
-Set the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. The output dataframes will be saved to the variable name of the users choosing.  
+Setting the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. The output dataframes will be saved to the variable name of the users choosing.  
 
 ```
 Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
@@ -154,23 +154,12 @@ SauntonNSMEandA = Saunton.NSMEandA()
 Out:
 ```
 <p align="center" width="100%">
-<img align = 'left' width="45%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
-<img align = 'right' width="45%" alt="NSMEA" src ="https://user-images.githubusercontent.com/103570277/234302341-4163c9f1-296e-44bb-b2a5-a006be62587e.png">
- </p>
- 
- 
- <p align="center" width="100%">
-<img align = 'left' width="45%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
-<img align = 'right' width="45%" alt="EPR" src ="https://user-images.githubusercontent.com/103570277/234679311-1950f462-9864-4fc2-9853-6eaffde78bc6.png"
- ></p>
-
-
-
-
-
+<img align = 'left' width="30%" alt="SCE" src = "https://user-images.githubusercontent.com/103570277/234302550-464bc5bf-f758-4e56-9562-93c6956072a7.png">
+<img align = 'center' width="30%" alt="NSMEA" src ="https://user-images.githubusercontent.com/103570277/234302341-4163c9f1-296e-44bb-b2a5-a006be62587e.png">
+<img align = 'right' width="30%" alt="NSM" src ="https://user-images.githubusercontent.com/103570277/234302214-5d05cd0b-f005-4eab-ac84-99ccd21cfed9.png">
 
  
-Set the configurations for the DOD analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. Note that subplots will only work if analysis method that been used 
+Setting the configurations for the DOD analysis functions.  Note that subplots will only work if analysis method that been used 
 
 ```
 SauntonDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
@@ -200,7 +189,7 @@ SauntonOldesttoNewest = SauntonDOD.OldesttoNewest()
 ```
 
 
-# Roadmap 
+# References 
 
 
 # Support 
