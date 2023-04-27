@@ -27,7 +27,7 @@ The volumetric change functions are performed on a time series of Digitial Eleva
 
 | Function | Description | Output |
 | --- | --- | --- |
-Masking | Crops the DEM’s using prior made vector shapefile and masks regions outside of the desired area to set data value. | Masked DEM’s saved in the chosen directory with the name ’YYYYMMmasked.tif’ |
+Masking | Crops the DEM’s using prior made polygon vector shapefile (*must be saved as 'VolumePoly.shp' in directory folder) and masks regions outside of the desired area to a set data value. | Masked DEM’s saved in the chosen directory with the name ’YYYYMMmasked.tif’ |
 DEMofDifference | Identifies the masked DEM’s in directory and iterates through them in order from youngest to oldest creating elevation models of difference. Allows DEM’s of different sizes within the calculation by cropping the larger DEM to the size of the smaller then performing the difference. | Series of elevation difference models along with model of difference graphs with color scale for change rates.|
 OldesttoNewest | Creates a DEM of difference between the oldest DEM and Newest DEM providing elevation change rates across the entire period.| Digital Elevation Model of Difference with graphical production with color scale for elevation change rates. |
 | NetVolumeChange | Applies the pixel size parameter to the elevation models to calculate volumetric changes using the Oldest to Newest DEMoD.| Volumetric changes within and outside of limits of detection.|
@@ -121,8 +121,8 @@ from DOD import DOD
 from DataImportandTransectDefinition import DataImportandTransectDefinition 
 import Geopandas as gpd
 
-intersectdata = gpd.read_file(r'intersections.shp')
-baseline = gpd.read_file(r'transect.shp')
+intersects = gpd.read_file(r'intersections.shp')
+transects = gpd.read_file(r'transect.shp')
 
 ```
 Implement the transect definition - decide whether the transect locator one or two is need by assessing the shape of the transects. 
@@ -133,7 +133,7 @@ georefs = [1, 0.8, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]
 measurement = [1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
 
 #Set the cleaning configuration
-Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersectdata, transects = baseline, path = path, georeferror=georefs, measurementerror=measurement)
+Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersects, transects = transects, path = path, georeferror=georefs, measurementerror=measurement)
 
 #Assign seaward transect coordinates to intersection dataframe (Check coordinates plot)
 Datacleaning.transectstartlocator1()
@@ -141,10 +141,10 @@ Datacleaning.transectstartlocator1()
 #Remove duplicate shoreline points
 Datacleaning.cleaning()
 
-#Add georeferencing and measurement errors for each shorleine to dataframe and save newly configured intersection file. 
-intersectednew = Datacleaning.errors()
+#Add georeferencing and measurement errors for each shorleine to dataframe and save newly configured intersection file to variable. 
+intersectiondata = Datacleaning.errors()
 
-#Create and save path to results folder 
+#Create and save path to results folder to be set as a parameter in the SCA functions.
 results = Datacleaning.results()
 
 ```
@@ -152,7 +152,7 @@ results = Datacleaning.results()
 Setting the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. The output dataframes will be saved to the variable name of the users choosing.  
 
 ```
-Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
+Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectiondata) 
 
 #Shorleine Change Envelope
 SauntonSCE = Saunton.SCE()
@@ -175,8 +175,11 @@ Setting the configurations for the DOD analysis functions.  Note that subplots w
 SauntonDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
 figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:4326', measurementerror = 0.15)
 
+#Mask the DEM's using 'VolumePoly.shp' file present in the data directory. 
 SauntonDOD.Masking()
+#DEM of Difference function. 
 SauntonDEMoDResults = PORTHDOD.DEMofDifference()
+#Subplot DEMofDifference result figures. 
 SauntonDOD.DODSubPlot()
 Out:
 -567871.2 (m3)
@@ -193,8 +196,6 @@ Out:
 
 
 ```
-SauntonWinter = SauntonDOD.winterDOD()
-SauntonDOD.DODwintersubplot()
 SauntonOldesttoNewest = SauntonDOD.OldesttoNewest()
 ```
 
