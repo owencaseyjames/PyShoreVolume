@@ -23,7 +23,7 @@ This package offers the ability to perform 5 well established Shoreline Change A
 | NSMEandA (Net Shoreline Movement Erosion and Accretion) | Net movement between the oldest shoreline position and most recent shoreline position with erosion and accretion trends being identified. | NSM with graphical output of NSM rates on top of satellite Imagery, Dictionary of NSMEandA rates, Pandas DataFrame of Statistics. |
 
 
-The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates. In a coastal setting this can allow sediment volumes across the entire shore to measured. The full range of functions are defined below (Carvahlo et al. 2021).
+The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates  (Carvahlo et al. 2021). In a coastal setting this can allow sediment volumes across the entire shore to measured. The full range of functions are defined below.
 
 | Function | Description | Output |
 | --- | --- | --- |
