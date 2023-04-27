@@ -132,11 +132,19 @@ Implement the transect definition - decide whether the transect locator one or t
 georefs = [1, 0.8, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]
 measurement = [1, 1, 1, 1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
 
-
+#Set the cleaning configuration
 Datacleaning = DataImportandTransectDefinition(CRS = 4326, intersects = intersectdata, transects = baseline, path = path, georeferror=georefs, measurementerror=measurement)
+
+#Assign seaward transect coordinates to intersection dataframe (Check coordinates plot)
 Datacleaning.transectstartlocator1()
+
+#Remove duplicate shoreline points
 Datacleaning.cleaning()
+
+#Add georeferencing and measurement errors for each shorleine to dataframe and save newly configured intersection file. 
 intersectednew = Datacleaning.errors()
+
+#Create and save path to results folder 
 results = Datacleaning.results()
 
 ```
@@ -146,8 +154,11 @@ Setting the configurations for the SCA analysis functions. An instance of this c
 ```
 Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectdata) 
 
+#Shorleine Change Envelope
 SauntonSCE = Saunton.SCE()
+#Net Shoreline Movement
 SauntonNSM = Saunton.NSM()
+#Net Shoreline Movement Erososion and Accretion 
 SauntonNSMEandA = Saunton.NSMEandA()
 
 Out:
