@@ -12,7 +12,7 @@ A Python Package for the production of shoreline and beach volumetric change sta
 
 # Functions 
 
-This package offers the ability to perform 5 Shoreline Change Analysis functions from transect based shoreline intersection shapefiles. The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
+This package offers the ability to perform 5 well established Shoreline Change Analysis functions from transect based shoreline intersection shapefiles (Burningham and Fernandez-Nunez, 2020). The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
 
 | Function | Description | Output |
 | --- | --- | --- |
@@ -23,7 +23,7 @@ This package offers the ability to perform 5 Shoreline Change Analysis functions
 | NSMEandA (Net Shoreline Movement Erosion and Accretion) | Net movement between the oldest shoreline position and most recent shoreline position with erosion and accretion trends being identified. | NSM with graphical output of NSM rates on top of satellite Imagery, Dictionary of NSMEandA rates, Pandas DataFrame of Statistics. |
 
 
-The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates. In a coastal setting this can allow sediment volumes across the entire shore to measured. The full range of functions are defined below. 
+The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates. In a coastal setting this can allow sediment volumes across the entire shore to measured. The full range of functions are defined below (Carvahlo et al. 2021).
 
 | Function | Description | Output |
 | --- | --- | --- |
@@ -156,8 +156,10 @@ Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10,
 
 #Shorleine Change Envelope
 SauntonSCE = Saunton.SCE()
+
 #Net Shoreline Movement
 SauntonNSM = Saunton.NSM()
+
 #Net Shoreline Movement Erososion and Accretion 
 SauntonNSMEandA = Saunton.NSMEandA()
 
@@ -177,8 +179,10 @@ figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:43
 
 #Mask the DEM's using 'VolumePoly.shp' file present in the data directory. 
 SauntonDOD.Masking()
+ 
 #DEM of Difference function. 
 SauntonDEMoDResults = PORTHDOD.DEMofDifference()
+ 
 #Subplot DEMofDifference result figures. 
 SauntonDOD.DODSubPlot()
 Out:
@@ -195,13 +199,11 @@ Out:
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
 
 
-```
-SauntonOldesttoNewest = SauntonDOD.OldesttoNewest()
-```
-
-
 # References 
-
+ 
+H. Burningham and M. Fernandez-Nunez. Shoreline change analysis. Sandy Beach Morphodynam- ics, pages 439–460, 1 2020. doi: 10.1016/B978-0-08-102927-5.00019-9.
+ 
+R. C. Carvalho, B. Allan, D. M. Kennedy, C. Leach, S. O’Brien, and D. Ierodiaconou. Quan- tifying decadal volumetric changes along sandy beaches using improved historical aerial photographic models and contemporary data. Earth Surface Processes and Landforms, 46(10):1882–1897, 8 2021. ISSN 1096-9837. doi: 10.1002/ESP.5130. URL https: //onlinelibrary.wiley.com/doi/full/10.1002/esp.5130https://onlinelibrary.wiley. com/doi/abs/10.1002/esp.5130https://onlinelibrary.wiley.com/doi/10.1002/esp.5130.
 
 # Support 
 
