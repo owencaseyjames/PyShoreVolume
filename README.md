@@ -203,7 +203,7 @@ Out:
  
 H. Burningham and M. Fernandez-Nunez. Shoreline change analysis. Sandy Beach Morphodynam- ics, pages 439–460, 1 2020. doi: 10.1016/B978-0-08-102927-5.00019-9.
  
-R. C. Carvalho, B. Allan, D. M. Kennedy, C. Leach, S. O’Brien, and D. Ierodiaconou. Quan- tifying decadal volumetric changes along sandy beaches using improved historical aerial photographic models and contemporary data. Earth Surface Processes and Landforms, 46(10):1882–1897, 8 2021. ISSN 1096-9837. doi: 10.1002/ESP.5130. URL https: //onlinelibrary.wiley.com/doi/full/10.1002/esp.5130https://onlinelibrary.wiley. com/doi/abs/10.1002/esp.5130https://onlinelibrary.wiley.com/doi/10.1002/esp.5130.
+R. C. Carvalho, B. Allan, D. M. Kennedy, C. Leach, S. O’Brien, and D. Ierodiaconou. Quan- tifying decadal volumetric changes along sandy beaches using improved historical aerial photographic models and contemporary data. Earth Surface Processes and Landforms, 46(10):1882–1897, 8 2021. ISSN 1096-9837. doi: 10.1002/ESP.5130.
 
 # Support 
 
