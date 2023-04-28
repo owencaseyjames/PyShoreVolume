@@ -122,17 +122,15 @@ def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                           newdatedatageoms = np.vstack((newdategeomsx,newdategeomsy)).T
                           olddatedatageoms = np.vstack((olddategeomsx,olddategeomsy)).T
                           transgeoms = np.vstack((transgeometryx, transgeometryy)).T
-                          #####Issue with newdate geoms - should remove duplicate date coords on one trans 
+                          
                           
                           distancesbetweenyears = cdist(newdatedatageoms,olddatedatageoms,'euclidean')
                           maxs = np.max(distancesbetweenyears)
                           location = np.where(distancesbetweenyears == maxs)
-                          # geopy.distance.geodesic((transectsvalx,transectsvaly)).m
-                          # print(location)
+
                           distanceold = cdist(olddatedatageoms, transgeoms, 'euclidean')
                           distancenew = cdist(newdatedatageoms, transgeoms, 'euclidean')
-                                                   
-                          # print(newdatedatageoms[location[0]][0][0])
+
                           newdatedatadf = pd.DataFrame(newdatedatageoms)
                           trannew = GeoDataFrame(newdatedatadf, geometry = gpd.points_from_xy(newdatedatadf[0],newdatedatadf[1]), crs = CRS)
                         
@@ -187,7 +185,7 @@ def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                         ax.plot(coordx[i:i+2],coordy[i:i+2],'ro-',marker = None, c=cols[i])    
                for ins in range(0,len(trid),trloc):                    
                          ax.annotate(trid[ins], (coordx[ins], coordy[ins]))  
-                  # fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax)
+                  
                ctx.add_basemap(ax, source=ctx.providers.Esri.WorldImagery, zoom=15)
                
                plt.title('Net Shoreline Movement - Erosion and Accretion',fontsize=15 )
