@@ -181,6 +181,10 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                                 distancesbetweendates = distancesbetweendates[0][0]
                                 euceprresult = euceprresult[0][0]
     
+                            # eprerrorpos = eprresult + eprerror
+                            # eprerrorneg = eprresult - eprerror    
+                            
+                            # print(olddatedatageoms[location[1][0]])
                             eprdic[ids]= { 'Oldest date coords': coordinate1,'Oldest date':oldestdatedate,
                                           'Newest date coords':coordinate2, 'Newest date': newestdatedate, 
                                           'EPR':eprresult, 'Euclidean EPR':euceprresult, 'Transect':ids,'Total distance':distances,
@@ -201,7 +205,7 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                         # eprerrneg.append(i['EPRerrneg'])
                         # print(eprerrneg,eprerrpos)
                     
-         
+                    # transects.reverse() ###To get transects going from south to north!
                     
                     fig = plt.figure(figsize=(5,15))
                     ax = fig.add_subplot(111)

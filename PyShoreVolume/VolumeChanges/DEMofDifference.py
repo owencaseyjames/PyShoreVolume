@@ -12,17 +12,18 @@ from rasterio.plot import show , show_hist
 import glob
 
 import fiona
+# import rioxarray
 
 import geopandas as gpd
 from geopandas import GeoSeries, GeoDataFrame
 import pandas as pd
 
 import os 
-
 import scipy
 from scipy.spatial.distance import cdist, pdist
 
 import numpy as np
+
 
 import shapely
 from shapely.geometry import Point, MultiPoint, box
@@ -43,6 +44,7 @@ import time
 
 import datetime
 from datetime import datetime
+
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -81,11 +83,13 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
         DODdic = {}
         # print(maskglob)
         for i in maskglobresults:
-            for count in range(0,len(maskglobresults[0])):       
+            for count in range(0,len(maskglobresults[0])):
+        ###use the counter to index the mask glob results list [0]
                 if count < num:
-                    
+                    print(count)
                     older = rio.open(i[count])
                     newer = rio.open(i[count+1])
+
 
                     date1 = (i[count][-16:-10])
                     date2 = (i[count+1][-16:-10])
@@ -115,9 +119,15 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                         with rio.open(path+date1+date2+'DOD.tif','w',**out_meta) as dest:
                               dest.write(x.filled(fill_value = -9999.0), 1)
                               dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
+                        # x = np.ma.array(x, mask=(mask))
+                        
+                        
+                        ###PLOT FUNC
 
+                        
                         lidardem = rio.open(path+date1+date2+'DOD.tif')                                        
-                        lidardem1 = np.array(lidardem.read(1)) 
+                        lidardem1 = np.array(lidardem.read(1))
+                        #Uses mask created above
                         lidardem1 = np.ma.array(lidardem1, mask=(mask))
                         
                         
@@ -127,11 +137,13 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                             
                         norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
 
-                        show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) 
+                        show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) \
+                             # title = 'DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]))
+                            
                         ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)     
                         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax=ax)
                         cbar.set_label('Elevation Change (m)',rotation=270, labelpad=10)
-                        
+                        # ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=Config.titlesize)
                         plt.tight_layout()
                         plt.xticks(size = 5)
                         plt.yticks(size = 5)
@@ -151,12 +163,13 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           boundbox  = newer.bounds
                           geom = box(*boundbox)
                           df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
-                          
+                          # df = df.set_crs(Config.DODCRS)
                           #   ###Shapefile
                           df.to_file(path+'boundary.shp')
                           with fiona.open(path+'boundary.shp','r') as shapefile:
                                shapes = [feature['geometry'] for feature in shapefile]
-                    
+                        #     file = rio.open(i)
+                        #     date = (i[-10:-4])
                             ###Clip older mask by newer shapefile
                           out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True,  nodata = -9999.0)
                           out_meta = newer.meta
@@ -171,12 +184,16 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
 
                           old = np.array(olderimage.read(1),dtype = rasterio.float32)
                           
+                          
+                          
                           imagenewmask = np.ma.array(new, mask = (new == -9999.0))
                           imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
+                          # imagenewmask = np.ma.masked_where((new == 0.0)&(new == -9999.0), new)
                        
                           imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                           imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-  
+
+                          
                           mask1 = np.ma.getmask(imagenewmask)
                           mask2 = np.ma.getmask(imageoldmask)
                     
@@ -194,11 +211,18 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           lidardem1 = np.array(lidardem.read(1))   
                           lidardem1 = np.ma.array(lidardem1, mask=(mask))
                           
+                          
+                          # fig = matplotlib.pyplot.figure(1,figsize=(Config.figwidth,Config.figheight))
                           fig = matplotlib.pyplot.figure()
                           ax = fig.add_subplot(1,1,1)
                           
+                          # fig, ax = plt.subplots(1, figsize=(Config.figwidth,Config.figheight))  
+                          
+                          
+                          
                           norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
-                          show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,)
+                          show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) \
+                               # title = 'DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]))
                                
                           ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)      
                           cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax =ax)
@@ -278,6 +302,7 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           
                           norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
                           show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) \
+                               # title = 'DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]))
                           ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)         
                           cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
                           cbar.set_label('Elevation Change (m)', rotation=270)
@@ -304,3 +329,6 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
         DOD = DOD.T
         
         return  DOD
+    # except I
+    # ndexError:
+    #     pass

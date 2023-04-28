@@ -80,7 +80,6 @@ def DODautumnsubplot(save_to_path, subplotcols):
     Parameters
     -------
     save_to_path: Path to the results folder
-    subplotcols: Columns to be in the results folder.
 
     Returns
     -------
@@ -90,10 +89,13 @@ def DODautumnsubplot(save_to_path, subplotcols):
     
     num = (len(sorted(glob.glob(save_to_path+"*autumn.png")))-1) 
     plt.figure(figsize=(10,10))
-
+    
+    
     for i in autumnresults:
         for count in range(0,len(autumnresults[0])):
-          
+
+  
+        # #create figure            
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)    
             # if num > 
@@ -102,6 +104,9 @@ def DODautumnsubplot(save_to_path, subplotcols):
             plt.tight_layout()
             plt.imshow(pic)
             plt.savefig(save_to_path+'/'+'DOD Autumn Subplots.png',bbox_inches='tight')
+                    
+
+
 
 def DODspringsubplot(save_to_path, subplotcols):
     """
@@ -111,7 +116,6 @@ def DODspringsubplot(save_to_path, subplotcols):
     Parameters
     -------
     save_to_path: Path to the results folder
-    subplotcols: Columns to be in the results folder.
 
     Returns
     -------
@@ -121,15 +125,22 @@ def DODspringsubplot(save_to_path, subplotcols):
     
     num = (len(sorted(glob.glob(save_to_path+"*spring.png")))-1) 
     plt.figure(figsize=(10,10))
+    # gs1 = gridspec.GridSpec(50,20)
+    # gs1.update(wspace = 1, hspace = 1, left = 1, right = 2, bottom = 1, top = 2)
+    
     
     for i in springresults:
         for count in range(0,len(springresults[0])):
     
+        # #create figure
+            # print(i)
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)
 
             plt.subplot(2,subplotcols, count+1)
+            plt.subplots_adjust(wspace = 0.1, hspace=0.1)
             plt.axis('off')
+            # plt.tight_layout()
             plt.imshow(pic)
             plt.savefig(save_to_path+'/'+'DOD Spring Subplots.png',bbox_inches='tight')     
             
@@ -142,7 +153,6 @@ def DODsummersubplot(save_to_path, subplotcols):
     Parameters
     -------
     save_to_path: Path to the results folder
-    subplotcols: Columns to be in the results folder.
 
     Returns
     -------
@@ -155,11 +165,15 @@ def DODsummersubplot(save_to_path, subplotcols):
     for i in summerresults:
         for count in range(0,len(summerresults[0])):
 
+        
+        # #create figure
+            print(i)
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)
-            
             plt.subplot(2,subplotcols,count+1)
-            plt.axis('off')            
+            
+            plt.axis('off')
+            
             plt.imshow(pic)
             plt.tight_layout()
             plt.savefig(save_to_path+'/'+'DOD Summer Subplots.png',bbox_inches='tight')                
@@ -172,7 +186,6 @@ def DODwintersubplot(save_to_path, subplotcols):
     Parameters
     -------
     save_to_path: Path to the results folder
-    subplotcols: Columns to be in the results folder.
 
     Returns
     -------
@@ -185,13 +198,25 @@ def DODwintersubplot(save_to_path, subplotcols):
     for i in winterresults:
         for count in range(0,len(winterresults[0])):
 
+        
+        # #create figure
+            print(i)
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)
-            
             plt.subplot(2,subplotcols,count+1)
+            
             plt.axis('off')
             plt.tight_layout()
             plt.imshow(pic)
+            plt.subplots_adjust(hspace=0, wspace=0)
             plt.savefig(save_to_path+'/'+'DOD Winter Subplots.png',bbox_inches='tight')                        
-
+# dods = glob.glob(Config.save_to_path+'DOD.png')
+# for i in dods:
+#     i = Image.open(arch)
+#     iar = np.array(i)
+#     for i in range(3):
+#         for j in range(3):
+#             axis[i,j].plot(iar)
+#             plt.subplots_adjust(wspace=0,hspace=0)
+# plt.show()
                 

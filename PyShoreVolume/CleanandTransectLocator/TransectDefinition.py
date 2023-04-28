@@ -73,7 +73,7 @@ def transectstartlocator1(baseline, intersectednew):
             GeoDataframe of cross transects shapefile
         intersectednew : Pandas GeoDataframe
             Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
-            with YYYYMMDD integer values, 'geometry_x' field of each shoreline intersection,
+            with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
     
         Returns
         -------
@@ -152,4 +152,23 @@ def transectstartlocator2(baseline, intersectednew):
     
         
 
+# if __name__ =='__main__':
+#     sys.exit()
+    
+####DECIDE IF WE WILL GO AHEAD WITH THIS (MULTIPLE CONTOUR VALUES)
+###Set geometry column now that Geometry x is the coords of the intersected point
+# intersected = intersected.set_geometry('geometry_x')
+
+# ###Extract the intersections of contours produced from errors
+# lowerranges = GeoDataFrame(intersected.loc[intersected['Z']== intersected['Z'].min()])
+# lowerranges = lowerranges.set_geometry('geometry_x')
+
+
+# higherranges = intersected.loc[intersected['Z']== intersected['Z'].max()]
+# # higherranges['TR_ID'] = higherranges['TR_ID'].astype(int)
+# # higher = GeoDataFrame(intersectednew.loc[intersectednew['Z']== intersectednew['Z'].max()])
+# higherranges= higherranges.set_geometry('geometry_x')
+# print(max(higherranges['TR_ID']))
+# print(max(lowerranges['TR_ID']))
+# highers.TR_ID.dtype
 

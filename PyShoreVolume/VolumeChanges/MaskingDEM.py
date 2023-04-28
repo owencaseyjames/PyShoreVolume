@@ -24,16 +24,11 @@ import fiona
 
 from matplotlib import pyplot as plt
 
+
 def MaskingDEM(path, MaskingCRS, DODCRS):
     """
     Crops the DEM's using prior made vector shapefile and masks regions outside
     of the desired area.
-    
-    Parameters
-    -------
-    path: Path name to directory
-    MaskingCRS: Coordinate Reference System EPSG code. 
-    DODCRS: Coordinate Reference System EPSG code. 
 
     Returns
     -------
