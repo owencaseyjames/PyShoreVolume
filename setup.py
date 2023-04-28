@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 import os
+
 from setuptools import setup
 
 import sys
+
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
+
 
 setup(name='PyShoreVolume',
       version ='1.0.0',
@@ -11,7 +18,8 @@ setup(name='PyShoreVolume',
       author_email = 'owen.james@kcl.ac.uk',
       licence ='MIT',
       keywords = 'Shoreline Erosion SCA Volume Digital Elevation Model EPR SCA NSM LRR'
-      long_description= read('README.txt'),
+      long_description=long_description,
+      long_description_content_type='text/markdown'
       install_requires = ['basemap_data==1.3.2',
                          'contextily==1.3.0',
                          'Fiona==1.9.1',
