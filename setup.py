@@ -9,9 +9,7 @@ setup(name='PyShoreVolume',
       licence='MIT',
       long_description=open('README').read(),
       install_requires= ,
-      url = ,
-      
-      packages=
-      )
+      url = 'https://github.com/owencaseyjames/PyShoreVolume',
+      requires)
 
     
