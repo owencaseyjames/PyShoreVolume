@@ -5,7 +5,7 @@ from setuptools import setup
 import sys
 
 setup(name='PyShoreVolume',
-      versio n='1.0.0',
+      version ='1.0.0',
       description ='Python Based Shoreline Change and Beach Volume Analysis Tool',
       author ='Owen Casey James',
       author_email = 'owen.james@kcl.ac.uk',
