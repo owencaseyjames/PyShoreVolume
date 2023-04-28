@@ -67,7 +67,7 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                ----------
                intersectednew : Pandas GeoDataFrame
                    Geodataframe containing 'TR_ID' field of transect numbers, 'Year' field 
-                   with YYYYMM values, 'geometry_x' field of each  shorlein intersection.
+                   with YYYYMMDD values, 'geometry_x' field of each  shorlein intersection.
                    point. 
                CRS : Integer Variable
                     Coordinate reference system to be used. 
