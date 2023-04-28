@@ -73,7 +73,7 @@ def transectstartlocator1(baseline, intersectednew):
             GeoDataframe of cross transects shapefile
         intersectednew : Pandas GeoDataframe
             Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
-            with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
+            with YYYYMMDD integer values, 'geometry_x' field of each shoreline intersection,
     
         Returns
         -------
