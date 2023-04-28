@@ -100,12 +100,12 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         #Transform for mapping
                                         firstdata = firstdata.to_crs(3857)
                                         seconddata = seconddata.to_crs(3857)
-####This dictionary isnt needed >
+
                                         scedic[ids] = {'First coordinate':coordinate1,'Second coordinate':coordinate2, 
                                                        'Transect':ids,'Distances': distances, 'Newest date': firstyear, 
                                                        'Oldest date':secondyear} 
+                                        
                                         ##Saves coords and distances in dictionary
-                                    
                                         coordx.append(firstdata['geometry'].x)
                                         coordy.append(firstdata['geometry'].y)
                                         coordx.append(seconddata['geometry'].x)
@@ -114,9 +114,7 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         distances1.append(distances)
                                         trid.append(ids)
                                         trid.append(ids)
-                                            
-
-                                
+        
                                 norm = matplotlib.colors.Normalize(vmin = min(distances1), vmax= max(distances1), clip = True)
                                 cmaps= plt.get_cmap('viridis')
                                 c = cmaps(norm(distances1))
