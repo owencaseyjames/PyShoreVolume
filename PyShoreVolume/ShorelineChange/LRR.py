@@ -71,7 +71,7 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
         ----------
         intersectednew : Pandas GeoDataFrame
             Geodataframe containing 'TR_ID' field of transect numbers, 'Year' field 
-            with YYYYMM values, 'geometry_x' field of each  shoreline intersections.
+            with YYYYMMDD values, 'geometry_x' field of each  shoreline intersections.
         ellipsoidal : Ellipsoid model to use in the distance calculations
     
         Returns
@@ -121,9 +121,7 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
                 ##Reg plots
                 findropna['year']= findropna.index
                 findropna['yearplot'] = pd.to_datetime(findropna['year'], format="%Y%m%d")
-                # print(findropna['yearplot'])
                 findropna['years'] = findropna['year'].astype('float64')
-                # print(findropna)
                 sns.regplot(data=findropna, x= 'years', y='Distance from baseline')
                 plt.title("Transect %d" %i)
                 plt.show()
@@ -132,7 +130,6 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
                 
                 finlist = np.array(findropna['year'])
                 finlist.astype('float64')
-                # print(finlist)
             
                 yvals = findropna['Distance from baseline'].values.reshape(-1,1)
                 xvals = finlist.reshape(-1,1)
@@ -142,15 +139,13 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
                 linfin.score(xvals,yvals)
                 resid = yvals - ypred
                 meanres = np.mean(resid)
-                # print(i)
                 
                 
                 
                 ##Alternate stats model - results differ
                 replaced=[]
                 for ins in findropna['yearplot']:
-                    replaced.append(ins.replace(tzinfo=timezone.utc).timestamp())
-                # # print(replaced)    
+                    replaced.append(ins.replace(tzinfo=timezone.utc).timestamp())  
                 Ysm = findropna['Distance from baseline']
                 Xsm = replaced
                 result  = scipy.stats.linregress(Xsm, Ysm)
