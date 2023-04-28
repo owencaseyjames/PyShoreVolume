@@ -16,6 +16,7 @@ import os
 import scipy
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 from scipy.spatial.distance import cdist, pdist
+from scipy import stats
 
 import statsmodels.api as sm
 
@@ -30,6 +31,8 @@ from sklearn import preprocessing
 from sklearn import linear_model
 from sklearn.linear_model import LinearRegression 
 from sklearn.metrics import r2_score, mean_squared_error
+
+
 
 import seaborn as sns
 
@@ -58,14 +61,32 @@ import pickle
 
 import sys
 
-import Config
 
-def linearregressionrate(intersectednew):
+def LRR(intersectednew, ellipsoidal, save_to_path):
+        """
+        Performs linear regression on shoreline change positions through time.
+        
+    
+        Parameters
+        ----------
+        intersectednew : Pandas GeoDataFrame
+            Geodataframe containing 'TR_ID' field of transect numbers, 'Year' field 
+            with YYYYMM values, 'geometry_x' field of each  shoreline intersections.
+    
+        Returns
+        -------
+        lrrresults : Dictionary
+            Dictionary of linear regression rates of shorleine changes with 
+            associated transect numbers and regression statistics. 
+    
+        """
         val = min(intersectednew['TR_ID'])
         lrrdic = {}
         cols = []
-        for ids in intersectednew['TR_ID']:
-               if ids == val:            
+        uniquetrans = intersectednew.TR_ID.unique()
+
+        for e, ids in enumerate(uniquetrans):
+         
                    s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
                    
                    geomsx = np.array(s['geometry_x'].x)
@@ -78,15 +99,15 @@ def linearregressionrate(intersectednew):
         
                    geoms = np.vstack((geomsx,geomsy)).T
                    transgeoms = np.vstack((transgeometryx, transgeometryy)).T
-                   print(transgeoms[0][0],transgeoms[0][1])
+                   # print(transgeoms[0][0],transgeoms[0][1])
         
                    ds = []
                    for i in geoms:             
-                       ds.append(geopy.distance.geodesic((i[0],i[1]),(transgeoms[0][0],transgeoms[0][1])).m)
+                       ds.append(geopy.distance.distance((i[0],i[1]),(transgeoms[0][0],transgeoms[0][1]), ellipsoid = ellipsoidal).m)
                    lrrdic[ids] = dict(zip(years, ds))                 
                    val = val+1    
                    #####Issue with newdate geoms - should remove duplicate date coords on one trans 
-        
+
         
         lindf =   pd.DataFrame(lrrdic)  
         final = lindf.sort_index()
@@ -120,32 +141,29 @@ def linearregressionrate(intersectednew):
                 linfin.score(xvals,yvals)
                 resid = yvals - ypred
                 meanres = np.mean(resid)
-                print(i)
+                # print(i)
+                
+                
                 
                 ##Alternate stats model - results differ
                 replaced=[]
                 for ins in findropna['yearplot']:
                     replaced.append(ins.replace(tzinfo=timezone.utc).timestamp())
-                # print(replaced)    
+                # # print(replaced)    
                 Ysm = findropna['Distance from baseline']
                 Xsm = replaced
-                Xsm = sm.add_constant(Xsm)
-                models = sm.OLS(Ysm, Xsm)
-                results = models.fit()
-                print(results.summary())        
-                ##### 
+                result  = scipy.stats.linregress(Xsm, Ysm)
+                print(result.intercept, result)
                 
-                ###Results from first model.
-                print('Coef:', linfin.coef_)
-                print('Intercept:', linfin.intercept_)
-                print("R 2:",r2_score(yvals,ypred))
-                print('Residuals (mean should be zero):', meanres)
-                
-                lrrresults[i] = {'Coefficient': linfin.coef_,'Intercept':linfin.intercept_, \
-                                  'R2':r2_score(yvals,ypred),'Mean of Residuals':meanres}
+                lrrresults[i] = {'Intercept':result.intercept,'Slope':result.slope, \
+                                  'R2':(result.rvalue ** 2),'Stderr':result.stderr}
         
             else: 
                 continue
             # break
-        with open (Config.save_to_path+'/lrrdictionary.pkl', 'wb') as fb:
+        with open (save_to_path+'/lrrdictionary.pkl', 'wb') as fb:
             pickle.dump(lrrresults, fb, protocol = pickle.HIGHEST_PROTOCOL)
+            
+            lrrresults = pd.DataFrame(lrrresults)
+            lrrresults = lrrresults.T
+            return lrrresults

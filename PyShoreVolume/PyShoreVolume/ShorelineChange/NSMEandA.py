@@ -17,6 +17,8 @@ from scipy.spatial.distance import cdist, pdist
 
 import statsmodels.api as sm
 
+from statistics import mean
+
 import numpy as np
 
 import shapely
@@ -54,9 +56,31 @@ from datetime import datetime
 
 import pickle
 
-import Config
+import math
 
-def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
+def NSMEandA(intersectednew, transectplot, origCRS, CRS, ellipsoidal, save_to_path):
+               """
+               Produces graphical output of Erosion and Accretion distances. 
+                
+               Parameters
+               ----------
+               intersectednew : Pandas GeoDataFrame
+                    Geodataframe containing 'TR_ID' field of transect numbers, 'layer' field 
+                    with YYYYMM integer values, 'geometry_x' field of each shoreline intersection,
+                    and 'geometry_y' of each transect starting location. 
+               CRS : Integer Variable
+                    Coordinate reference system to be used. 
+               ellipsoidal : String Variable
+                    Ellipsoid type to be used in geo-distance measurements. 
+            
+               Returns
+               -------
+               nsmerrandacc : Dictionary
+                    Dictionary of Net Shoreline Erosion/Accretion distances with transect 
+                    ID number as key value, Newset and Oldest shoreline dates, coordinates 
+                    of each date.
+            
+               """
                val = min(intersectednew['TR_ID'])
                nsmdic = {}
                coordx=[]
@@ -68,8 +92,10 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                trid = []
                nsmerrandacc = {}
                uniquetrans = intersectednew.TR_ID.unique()
+               trloc = math.ceil((max(intersectednew['TR_ID'])/transectplot)/2)*2
+               
                for e, ids in enumerate(uniquetrans):
-                      if val == e:            
+                      # if val == e:            
                           s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
                           # print(s.columns)ko
                           newestdate = max(s['layer'])
@@ -108,11 +134,11 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                                                    
                           # print(newdatedatageoms[location[0]][0][0])
                           newdatedatadf = pd.DataFrame(newdatedatageoms)
-                          trannew = GeoDataFrame(newdatedatadf, geometry = gpd.points_from_xy(newdatedatadf[0],newdatedatadf[1]), crs = 4326)
+                          trannew = GeoDataFrame(newdatedatadf, geometry = gpd.points_from_xy(newdatedatadf[0],newdatedatadf[1]), crs = CRS)
                         
                           
                           olddatedatadf = pd.DataFrame(olddatedatageoms)
-                          tranold = GeoDataFrame(olddatedatadf, geometry = gpd.points_from_xy(olddatedatadf[0],olddatedatadf[1]), crs = 4326)
+                          tranold = GeoDataFrame(olddatedatadf, geometry = gpd.points_from_xy(olddatedatadf[0],olddatedatadf[1]), crs = CRS)
 
 
                           firstdata = trannew.to_crs(CRS)
@@ -128,7 +154,7 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                           
                           if distanceold[0][0] < distancenew[0][0]:
                                  col = 'r'
-                                 distances = abs(distances)
+                                 distances = -abs(distances)
                                  
                           elif distanceold[0][0] == distancenew[0][0]:
                                  col = 'y'
@@ -136,15 +162,15 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                                  col = 'b'
                                  
                           nsmerrandacc[ids] = {'Distances':distances, 'Newest Coord': coordinate1,'Newest Year':newestdate, \
-                                               'Oldest coord': coordinate2, 'Oldest year': oldestdate}
+                                               'Oldest coord': coordinate2, 'Oldest year': oldestdate, ' Transect':ids}
                           val = val+1    
                                                 
                           coordx.append(tranold['geometry'].x)
                           coordy.append(tranold['geometry'].y)
                           coordx.append(trannew['geometry'].x)
                           coordy.append(trannew['geometry'].y)
-                          distances1.append(maxs)
-                          distances1.append(maxs)
+                          distances1.append(distances)
+                          distances1.append(distances)
                           cols.append(col)
                           cols.append(col)
                           trid.append(ids)
@@ -159,7 +185,7 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                              
                for i in range(0,len(coordx),2):
                         ax.plot(coordx[i:i+2],coordy[i:i+2],'ro-',marker = None, c=cols[i])    
-               for ins in range(0,len(trid),100):                    
+               for ins in range(0,len(trid),trloc):                    
                          ax.annotate(trid[ins], (coordx[ins], coordy[ins]))  
                   # fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax)
                ctx.add_basemap(ax, source=ctx.providers.Esri.WorldImagery, zoom=15)
@@ -171,9 +197,19 @@ def netshorelinemovementerosionoracccretion(intersectednew,CRS, ellipsoidal):
                ax.set_ylabel('Latitude', fontsize = 12)
                ax.set_xlabel('Longitude', fontsize=12)
                plt.show()  
-               fig.savefig(Config.save_to_path+'/NetShorelineMovementErosionandAccretion.png')
+               fig.savefig(save_to_path+'/NetShorelineMovementErosionandAccretion.png',bbox_inches='tight')
                
                
-               with open (Config.save_to_path+'/nsmerrandaccdic.pkl', 'wb') as fb:
+               
+               with open (save_to_path+'/nsmerrandaccdic.pkl', 'wb') as fb:
                    pickle.dump(nsmerrandacc, fb, protocol = pickle.HIGHEST_PROTOCOL)       
-        
+                   
+               print(min(distances1), max(distances1))
+               
+               nsmerrandacc = pd.DataFrame(nsmerrandacc)
+               nsmerrandacc = nsmerrandacc.T
+               
+               return nsmerrandacc
+               
+               
+               
