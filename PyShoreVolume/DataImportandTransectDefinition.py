@@ -3,8 +3,8 @@
 from  CleanandTransectLocator.DataCleaning import cleaning
 from CleanandTransectLocator.TransectDefinition import transectstartlocator2, transectstartlocator1
 import os
-import pandas as pd
-from pandas import DataFrame as df
+import geopandas as gpd
+
 
 ##Directories ** Dont forget '/' at the end
 #os.chdir('/Users/owenjames/Dropbox/PhD/Shoreline_Data/cco_data-20220625114304/data/lidar/')
@@ -44,15 +44,16 @@ class DataImportandTransectDefinition():
         return save_to_path
     
     def errors(self):
-        uniques = df()
-        uniques['layer'] = df(self.intersects['layer'].unique())
+        uniques = gpd.GeoDataFrame()
+        uniques['layer'] = gpd.GeoDataFrame(self.intersects['layer'].unique())
         uniques = uniques.sort_values(by = ['layer'])
         uniques['Georef Err'] = self.georeferror
         uniques['Measurement Err'] = self.measurementerror
         if 'Georef Err' in self.intersects.columns: 
             uniques.set_index('layer').combine_first(self.intersects.set_index('layer'))            
         else:    
-            self.intersects = self.intersects.merge(uniques, on='layer', how= 'left')      
+            self.intersects = self.intersects.merge(uniques, on='layer', how= 'left')   
+        self.intersects = self.intersects.set_geometry('geometry_x')
         return self.intersects
     
     
