@@ -65,6 +65,8 @@ Below is a workflow example within QGIS to produce the necessary data files for 
 7. Save both Intersection and Transect file to the desired directory. 
 <img width="32%" alt="Intersections" src="https://user-images.githubusercontent.com/103570277/233673250-6dacea21-1041-4cfd-9815-5d7f8b944be1.png">
 </p>
+*Note - A QGIS script that merges elevation files, extracts shoreline contours from each date at user defined heights and merges the shoreline into one shapefile is available in the 'Extras' folder.
+
 
 For the DEM functions a single polygon shapefile is required to define the region under analysis and mask the DEM's to the set region in question. 
 
