@@ -45,6 +45,7 @@ setup(name='PyShoreVolume',
                      'Intended Audience :: Science/Research',
                      'Topic :: Scientific/Engineering :: Coastal Monitoring',
                      'Operating System :: OS Independent'],
+      py_modules['QGISMergedShoreline', 'File_Organisation_Script']
       )
 
     
