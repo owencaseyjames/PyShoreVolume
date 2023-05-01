@@ -2,6 +2,7 @@
 import os
 
 from setuptools import setup
+from setuptools import find_packages
 
 import sys
 
@@ -12,14 +13,14 @@ long_description = (this_directory / "README.md").read_text()
 
 
 setup(name='PyShoreVolume',
-      version ='1.0.0',
+      version ='1.0.1',
       description ='Python Based Shoreline Change and Beach Volume Analysis Tool',
       author ='Owen Casey James',
       author_email = 'owen.james@kcl.ac.uk',
       licence ='MIT',
-      keywords = 'Shoreline Erosion SCA Volume Digital Elevation Model EPR SCA NSM LRR'
+      keywords = 'Shoreline Erosion SCA Volume Digital Elevation Model EPR SCA NSM LRR',
       long_description=long_description,
-      long_description_content_type='text/markdown'
+      long_description_content_type='text/markdown',
       install_requires = ['basemap_data==1.3.2',
                          'contextily==1.3.0',
                          'Fiona==1.9.1',
@@ -28,7 +29,7 @@ setup(name='PyShoreVolume',
                          'matplotlib==3.7.1',
                          'numpy==1.23.5',
                          'pandas==1.5.3',
-                         'Pillow==9.5.0'
+                         'Pillow==9.4.0',
                          'pyproj==3.5.0',
                          'rasterio==1.3.6',
                          'scikit_learn==1.2.2',
@@ -38,14 +39,15 @@ setup(name='PyShoreVolume',
                          'statsmodels==0.13.5'] ,
       url = 'https://github.com/owencaseyjames/PyShoreVolume',
       python_requires = '>=3',
-      packages = find_packages(include = ['PyShoreVolume', 'ShorelineChange', 'VolumeChanges', 'CleanandTransectLocator', 'Extra']),
+      package_dir = {"":"src"}
+      packages = ['PyShoreVolume', 'PyShoreVolume.ShorelineChange', 'PyShoreVolume.VolumeChanges', 'PyShoreVolume.CleanandTransectLocator'],
       classifiers = ['Development Status :: 4 - Beta',
-                     'Licence :: OSI Approved :: MIT License',
+                     'License :: OSI Approved :: MIT License',
                      'Programming Language :: Python :: 3',
                      'Intended Audience :: Science/Research',
-                     'Topic :: Scientific/Engineering :: Coastal Monitoring',
+                     'Topic :: Scientific/Engineering :: GIS',
                      'Operating System :: OS Independent'],
-      py_modules['QGISMergedShoreline', 'File_Organisation_Script']
+      py_modules = ['QGISMergedShoreline', 'File_Organisation_Script'],
+      include_packge_data = True,
       )
-
     
