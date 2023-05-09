@@ -66,23 +66,17 @@ def OldesttoNewest(path, save_to_path, DODCRS):
             num = (len(sorted(glob.glob(path+"*masked.tif")))-1)
             # print(num)
             maskglobresults = [sorted(glob.glob(path+"*masked.tif"))]
-            # print(len(maskglobresults[:])) 
+
             older = rio.open(maskglobresults[0][0])
             newer = rio.open(maskglobresults[0][num])
             date1 = (maskglobresults[0][0][-16:-10])
             date2 = (maskglobresults[0][num][-16:-10])
             #           ##Create empty array of shape of newer raster
-
-                    
+                  
             new= newer.read(1, masked = True)
             old= older.read(1, masked = True)
             
-            # new = new #* 0.01
-            # imagenewmask = np.ma.masked_where(new == -9999, new)
-            
-            # # old = old #* 0.01
-            # imageoldmask = np.ma.masked_where(old == -9999, old)
-            # print(imageoldmask)
+
             if new.shape == old.shape: 
                     x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
     
@@ -101,16 +95,15 @@ def OldesttoNewest(path, save_to_path, DODCRS):
                     out_meta = newer.meta
                     with rio.open(path+date1+date2+'DOD.tif','w',**out_meta) as dest:
                           dest.write(x.filled(fill_value = -9999.0), 1)
-                    # x = np.ma.array(x, mask=(mask))
-                    
+
                     lidardem = rio.open(path+date1+date2+'DOD.tif')
                     lidardem1 = np.array(lidardem.read(1))
-                    # print(lidardem1.max())
+                    
                     lidardem1 = np.ma.array(lidardem1, mask=(mask))
                     
                     
                     fig, ax = plt.subplots(1, figsize=(5,5)) 
-                    print(lidardem1.min())
+                    
                          
                     norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
 
@@ -134,8 +127,7 @@ def OldesttoNewest(path, save_to_path, DODCRS):
                   df.to_file(path+'boundary.shp')
                   with fiona.open(path+'boundary.shp','r') as shapefile:
                       shapes = [feature['geometry'] for feature in shapefile]
-                #     file = rio.open(i)
-                #     date = (i[-10:-4])
+
                     ###Clip older mask by newer shapefile
                   
                   out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True, nodata = -9999)
@@ -188,7 +180,7 @@ def OldesttoNewest(path, save_to_path, DODCRS):
 
             elif new.shape > old.shape:    
                     ##Older bounding box shape
-                  print(older.bounds)
+                  
                   boundbox  = older.bounds
                   geom = box(*boundbox)
                   df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
@@ -196,8 +188,7 @@ def OldesttoNewest(path, save_to_path, DODCRS):
                   df.to_file(path+'boundary.shp')
                   with fiona.open(path+'boundary.shp','r') as shapefile:
                       shapes = [feature['geometry'] for feature in shapefile]
-                #     file = rio.open(i)
-                #     date = (i[-10:-4])
+               
                     ##Clip newer raster
                   out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999)
                   out_meta = older.meta
@@ -228,11 +219,10 @@ def OldesttoNewest(path, save_to_path, DODCRS):
                   out_meta = newer.meta
                   with rio.open(path+date1+date2+'DOD.tif','w',**out_meta) as dest:
                           dest.write(x.filled(fill_value = -9999.0), 1)
-                    # x = np.ma.array(x, mask=(mask))
-                    
+     
                   lidardem = rio.open(path+date1+date2+'DOD.tif')
                   lidardem1 = np.array(lidardem.read(1))
-                    # print(lidardem1.max())
+       
                   lidardem1 = np.ma.array(lidardem1, mask=(mask))
                     
                     
@@ -248,13 +238,7 @@ def OldesttoNewest(path, save_to_path, DODCRS):
                   fig.savefig(save_to_path+'/NetHeightChange.png')
                   show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
                   
-                  
-                  # imagenewmask = np.ma.masked_where(new == -9999, new)
-                  # # print(imagenewmask)  
-                  # x = np.where(imagenewmask, imagenewmask - imageoldmask, x)
-                  # # x = np.subtract(new, old, where = new >-9999)
-                  # xmask = np.ma.masked_array(x, mask=(x == -9999))
-                  
+
              
             
             

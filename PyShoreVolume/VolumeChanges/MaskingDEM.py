@@ -38,7 +38,6 @@ def MaskingDEM(path, MaskingCRS, DODCRS):
     with fiona.open(path+'Volumepoly.shp','r') as shapefile:
         shapes = [feature['geometry'] for feature in shapefile]
     globresults = glob.glob(path+"*.tif")
-    print(sorted(globresults))
     for i in sorted(globresults):
         file = rio.open(i)
         date = (i[-10:-4])

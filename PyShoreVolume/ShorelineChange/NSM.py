@@ -155,7 +155,7 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                ax = fig.add_subplot(111)
                             
                for i in range(0,len(coordx),2):
-                    ax.plot(coordx[i:i+2],coordy[i:i+2],'ro-',marker = None, c=c[i]) 
+                    ax.plot(coordx[i:i+2],coordy[i:i+2],marker = None, c=c[i]) 
                for ins in range(0,len(trid),trloc):                    
                     ax.annotate(trid[ins], (coordx[ins], coordy[ins]))  
                     

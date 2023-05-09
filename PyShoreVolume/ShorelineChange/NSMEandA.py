@@ -184,7 +184,7 @@ def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                ax = fig.add_subplot(111)
                              
                for i in range(0,len(coordx),2):
-                        ax.plot(coordx[i:i+2],coordy[i:i+2],'ro-',marker = None, c=cols[i])    
+                        ax.plot(coordx[i:i+2],coordy[i:i+2],marker = None, c=cols[i])    
                for ins in range(0,len(trid),trloc):                    
                          ax.annotate(trid[ins], (coordx[ins], coordy[ins]))  
                   # fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax)
@@ -204,7 +204,8 @@ def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                with open (save_to_path+'/nsmerrandaccdic.pkl', 'wb') as fb:
                    pickle.dump(nsmerrandacc, fb, protocol = pickle.HIGHEST_PROTOCOL)       
                    
-               print(min(distances1), max(distances1))
+               print("Maximum Erosion: {}".format(min(distances1)))
+               print("Maximum Accretion: {}".format(max(distances1)))
                
                nsmerrandacc = pd.DataFrame(nsmerrandacc)
                nsmerrandacc = nsmerrandacc.T

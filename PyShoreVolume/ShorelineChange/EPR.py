@@ -147,18 +147,17 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                             #ERROR
                             georeferencingerrornew = s['Georef Err'].loc[s['layer'] == newestdate]
                             measurementerrornew = s['Measurement Err'].loc[s['layer'] == newestdate]
-                            newerr = np.float(georeferencingerrornew + measurementerrornew)
+                            newerr = float(georeferencingerrornew + measurementerrornew)
                             
                             
                             georeferencingerrorold = s['Georef Err'].loc[s['layer'] == oldestdate]
                             measurementerrorold = s['Measurement Err'].loc[s['layer'] == oldestdate]
-                            olderr = np.float(georeferencingerrorold + measurementerrorold)
+                            olderr = float(georeferencingerrorold + measurementerrorold)
                             
                             ##Actual distance. 
                             eprresult = distances/timelength
                             
                             eprerror = (math.sqrt((newerr ** 2)+(olderr ** 2)))/timelength
-                            print(eprerror)
                             ##distance to transects (allows a +/- to be given to EPR Calculation)
                             distanceold = cdist(olddatedatageoms, transgeoms, 'euclidean')
                             distancenew = cdist(newdatedatageoms, transgeoms, 'euclidean')
