@@ -1,4 +1,15 @@
-include PyShoreVolume/src/Example Data/Intersections2.*
-include PyShoreVolume/src/Example Data/Transect1.*
+include PyShoreVolume/src/Example_Data/Transect1.cpg
+include PyShoreVolume/src/Example_Data/Transect1.dbf
+include PyShoreVolume/src/Example_Data/Transect1.prj
+include PyShoreVolume/src/Example_Data/Transect1.shp
+include PyShoreVolume/src/Example_Data/Transect1.shx
+include PyShoreVolume/src/Example_Data/Intersections2.cpg
+include PyShoreVolume/src/Example_Data/Intersections2.dbf
+include PyShoreVolume/src/Example_Data/Intersections2.prj
+include PyShoreVolume/src/Example_Data/Intersections2.shp
+include PyShoreVolume/src/Example_Data/Intersections2.shx
 include PyShoreVolume/src/Extra/File_Organisation_Script.py
 include PyShoreVolume/src/Extra/QGISMergedShoreline.py
+include PyShoreVolume/README.md
+include PyShoreVolume/setup.py
+include PyShoreVolume/requirements.txt
