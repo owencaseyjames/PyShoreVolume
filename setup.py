@@ -13,7 +13,7 @@ long_description = (this_directory / "README.md").read_text()
 
 
 setup(name='PyShoreVolume',
-      version ='1.0.0',
+      version ='1.0.2',
       description ='Python Based Shoreline Change and Beach Volume Analysis Tool',
       author ='Owen Casey James',
       author_email = 'owen.james@kcl.ac.uk',
@@ -48,7 +48,8 @@ setup(name='PyShoreVolume',
                      'Topic :: Scientific/Engineering :: GIS',
                      'Operating System :: OS Independent'],
       py_modules = ['QGISMergedShoreline', 'File_Organisation_Script'],
-      package_data = {'Extra':['Transect1.*'], 'Extra':['Intersections2.*', 'Transect1.*']},
+      package_data = {'PyShoreVolume.Extra':['Transect1.*'], 'PyShoreVolume.Extra':['Intersections2.*', 'Transect1.*', 'End Point Rate.jpg', 'netshorelinemovement.jpg', 'shorleinechangeenvelope.jpg', 'NetShorelineMovementErosionandAccretion.jpg' ,'nsm.pkl',
+      					'nsmerrandacc.pkl','scedic.pkl','lrrdictionary.pkl' ,'eprresults.pkl','File_Organisation_Script.py', 'QGISMergedShoreline.py']},
       include_package_data = True,
       )
     
