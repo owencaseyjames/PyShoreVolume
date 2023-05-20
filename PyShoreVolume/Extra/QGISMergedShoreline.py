@@ -18,16 +18,16 @@ from qgis.core import (QgsProject, QgsRasterLayer,
                     QgsLayerTreeLayer)
 
 # Data Directory Path
-dir_path = '/Users/owenjames/Dropbox/PhD/Shoreline_Data/cco_data-20220526120221/data/lidar'
+dir_path = '---'
 
 #File type
 filetype = "*.asc"
 
 #Path to data directory where SCA will be perfromed from
-saved = "/Users/owenjames/Dropbox/PhD/Shoreline_Data/cco_data-20220526120221/data/lidar/"
+saved = "---"
 
 #Contour height 
-contourheight = 2.45
+contourheight = ---
 
 #CRS 
 CRSystem = 'EPSG:4326'

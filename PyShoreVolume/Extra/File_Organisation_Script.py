@@ -7,9 +7,9 @@ import re
 import shutil
 
 #Change directories accordingly
-dir_name = os.chdir('/Users/owenjames/Dropbox/PhD/Shoreline_Data/Porthcurno/data/lidar')
+dir_name = os.chdir('---')
 ##Make sure the below code line has ' / ' at the end to indicate this is where the files are located.
-file_names = os.listdir('/Users/owenjames/Dropbox/PhD/Shoreline_Data/Porthcurno/data/lidar/')
+file_names = os.listdir('---')
 
 #Need to look at the file names to extract the characters to be matched.
 pattern = "[0-9][0-9][0-9][0-9][0-9][0-9]"
