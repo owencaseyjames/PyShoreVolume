@@ -88,13 +88,14 @@ def cleaning(intersected):
         dicty = {}
         for e, ids in enumerate(uniquetrans):
                 # if val == ids: 
-                print(ids, e)
+                # print(ids, e)
                 s = GeoDataFrame(intersected.loc[intersected['TR_ID'] == ids])
+                # print(s)
                 # s = s.loc[s['Z']== median]
                 s = s.set_geometry('geometry_x').to_crs(epsg=3857)
                 ##tr - transect geometry point
                 tr = s
-                tr = tr.set_geometry('geometry_y')
+                tr = tr.set_geometry('geometry_y').to_crs(epsg=3857)
                 uniquelayer = s['layer'].drop_duplicates()
                 #print(tr, uniquelayer)      
         
@@ -103,8 +104,9 @@ def cleaning(intersected):
                 for i in uniquelayer:
                     yeardrop = s.loc[s['layer']==i]
                     trs = tr.iloc[0]
+                    # print(trs)
                     dists = yeardrop['geometry_x'].distance(trs['geometry_y'])
-                    print(dists)
+                    # print(dists)
                     gdf1 = intersected.loc[dists.idxmin()]
                     gdf1 = gdf1.T
                     dicty = {}
