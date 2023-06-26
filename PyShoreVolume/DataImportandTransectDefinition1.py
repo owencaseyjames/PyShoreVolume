@@ -6,10 +6,6 @@ import os
 import geopandas as gpd
 
 
-##Directories ** Dont forget '/' at the end
-#os.chdir('/Users/owenjames/Dropbox/PhD/Shoreline_Data/cco_data-20220625114304/data/lidar/')
-#path = '/Users/owenjames/Dropbox/PhD/Shoreline_Data/cco_data-20220625114304/data/lidar/'
-
 ###!!! NEEED TO STATE IN DESCRIPTION THE 
 
 class DataImportandTransectDefinition(): 
