@@ -37,7 +37,6 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from matplotlib_scalebar.scalebar import ScaleBar
 
 import contextily as ctx
 
@@ -128,7 +127,7 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                         lidardem1 = np.array(lidardem.read(1))
                         #Uses mask created above
                         lidardem1 = np.ma.array(lidardem1, mask=(mask))
-                        print(lidardem.transform)
+                        
                         
                         #Plot
                         fig = matplotlib.pyplot.figure()
@@ -142,16 +141,10 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                         ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)     
                         cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax=ax)
                         cbar.set_label('Elevation Change (m)',rotation=270, labelpad=10)
-                        ax.add_artist(ScaleBar(1))
-                        x, y, arrow_length = 0.1, 0.99, 0.1
-                        ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),arrowprops=dict(facecolor='black', width=1, headwidth=5), \
-                                    ha='center', va='center', fontsize=5,\
-                                    xycoords=ax.transAxes)
-                        ax.margins(y=0)    
+           
                         plt.tight_layout()
-                        plt.xticks(size = 9, rotation = 25)
-                        plt.yticks(size = 9)
-                        
+                        plt.xticks(size = 5)
+                        plt.yticks(size = 5)
                         plt.show()
                         show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
                         fig.savefig(save_to_path+'/'+date1+date2+'DOD.png',bbox_inches='tight')
@@ -214,10 +207,10 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           lidardem1 = np.array(lidardem.read(1))   
                           lidardem1 = np.ma.array(lidardem1, mask=(mask))
                           
-                          print(lidardem.transform)
+
                           fig = matplotlib.pyplot.figure()
                           ax = fig.add_subplot(1,1,1)
-                          ax.margins(y=0) 
+ 
                           norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
                           show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) \
 
@@ -225,17 +218,13 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)      
                           cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax =ax)
                           cbar.set_label('Elevation Change (m)',rotation=270)
-                          ax.add_artist(ScaleBar(1))
-                          x, y, arrow_length = 0.1, 0.99, 0.1
-                          ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),arrowprops=dict(facecolor='black', width=1, headwidth=5), \
-                                      ha='center', va='center', fontsize=5,\
-                                      xycoords=ax.transAxes)
-                          plt.xticks(size = 9, rotation = 25)
-                          plt.yticks(size = 9)
+                          
+                          plt.xticks(size = 5)
+                          plt.yticks(size = 5)
                           plt.tight_layout()                          
                           plt.show()
                           show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
-                          fig.savefig(save_to_path+'/'+date1+date2+'DOD.png',bbox_inches='tight',pad_inches=0.4)  
+                          fig.savefig(save_to_path+'/'+date1+date2+'DOD.png',bbox_inches='tight')  
                                                     
                           
                           ##Vol Change    
@@ -296,7 +285,6 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           lidardem = rio.open(path+'/'+date1+date2+'DOD.tif')
                           lidardem1 = np.array(lidardem.read(1))
                           lidardem1 = np.ma.array(lidardem1, mask=(mask))
-                          print(lidardem.transform)
                           
                           fig = matplotlib.pyplot.figure()
                           ax = fig.add_subplot(1,1,1)     
@@ -306,18 +294,13 @@ def DEMofDifference(path, DODCRS, save_to_path, pixelsize ):
                           ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)         
                           cbar = plt.colorbar(cm.ScalarMappable(norm=norm, cmap = 'seismic_r'), ax = ax)
                           cbar.set_label('Elevation Change (m)', rotation=270)
-                          ax.add_artist(ScaleBar(1))
-                          x, y, arrow_length = 0.1, 0.99, 0.1
-                          ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),arrowprops=dict(facecolor='black', width=1, headwidth=5), \
-                                      ha='center', va='center', fontsize=5,\
-                                      xycoords=ax.transAxes)
-                          ax.margins(y=0)     
+
                           plt.tight_layout()
-                          plt.xticks(size = 9, rotation = 25)
-                          plt.yticks(size = 9)
+                          plt.xticks(size = 5)
+                          plt.yticks(size = 5)
                           plt.show()
                           show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
-                          fig.savefig(save_to_path+'/'+date1+date2+'DOD.png',bbox_inches='tight',pad_inches=0.4)
+                          fig.savefig(save_to_path+'/'+date1+date2+'DOD.png',bbox_inches='tight')
                           
                           ##Vol Change    
                           vols = lidardem1 * pixelsize
