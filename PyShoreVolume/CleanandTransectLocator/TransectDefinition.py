@@ -109,7 +109,7 @@ def transectstartlocator1(baseline, intersectednew):
 ##If transect and thus baseline start locations are on the other sifde of the transect 
 def transectstartlocator2(baseline, intersectednew):
         """
-        Locates the starting coordinates of each transect and merges them into the 
+        ocates the starting coordinates of each transect and merges them into the 
         into the intersection data frame.
         
         Parameters
@@ -147,7 +147,7 @@ def transectstartlocator2(baseline, intersectednew):
             intersectednew = intersectednew.merge(transectgeoms, on='TR_ID', how= 'left')
             
         intersected = intersectednew.set_geometry('geometry_x')
-        print(intersected['geometry_x'])
+        
         return intersected
     
         

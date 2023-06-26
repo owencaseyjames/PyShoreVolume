@@ -194,14 +194,8 @@ def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                erosiony = [Line2D([0],[0],color = 'r', lw = 4, label = 'Erosion'),
                            Line2D([0],[0],color = 'b', lw = 4, label = 'Accretion')]
                ax.legend(handles = erosiony)
-               ax.set_ylabel('Northing', fontsize = 12)
-               ax.set_xlabel('Easting', fontsize=12)
-               ax.tick_params(axis='x',rotation = 20)
-               ax.ticklabel_format(style='plain')
-               x, y, arrow_length = 0.75, 0.99, 0.05
-               ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),arrowprops=dict(facecolor='black', width=4, headwidth=10), \
-               ha='center', va='center', fontsize=12,\
-               xycoords=ax.transAxes)
+               ax.set_ylabel('Latitude', fontsize = 12)
+               ax.set_xlabel('Longitude', fontsize=12)
                plt.show()  
                fig.savefig(save_to_path+'/NetShorelineMovementErosionandAccretion.png',bbox_inches='tight')
                
