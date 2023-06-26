@@ -135,8 +135,14 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                 cbar.set_label('Change in Meters', rotation=270, fontsize = 13, labelpad = 12)
                                 ctx.add_basemap(ax, source=ctx.providers.Esri.WorldImagery, zoom=15)
                                 ax.set_title('Shoreline Change Envelope', fontsize=15)
-                                ax.set_ylabel('Latitude', fontsize = 12)
-                                ax.set_xlabel('Longitude', fontsize=12)
+                                ax.set_ylabel('Northing', fontsize = 12)
+                                ax.set_xlabel('Easting', fontsize=12)
+                                ax.tick_params(axis='x',rotation = 20)
+                                ax.ticklabel_format(style='plain')
+                                x, y, arrow_length = 0.85, 0.99, 0.05
+                                ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),arrowprops=dict(facecolor='black', width=4, headwidth=10), \
+                                ha='center', va='center', fontsize=12,\
+                                xycoords=ax.transAxes)       
                                 plt.show()
                                 fig.savefig(save_to_path+'shorleinechangeenvelope.png',bbox_inches='tight')
                                 

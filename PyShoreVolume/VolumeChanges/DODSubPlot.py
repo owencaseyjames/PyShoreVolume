@@ -29,6 +29,7 @@ from matplotlib import cm
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axisartist.axislines import Subplot 
 
+import string 
 
 from PIL import Image
 
@@ -51,24 +52,29 @@ def DODSubPlot(save_to_path, subplotcols):
     multiple_rasters = [sorted(glob.glob(save_to_path+'*DOD.png'))]
     num = (len(sorted(glob.glob(save_to_path+"*DOD.png"))))
     nums = num -1
-    if (num % 2) == 0:
-        print('fine')
-    else:
-        num = num + 1
+    alphabet = list(string.ascii_lowercase)
+    # if (num % 2) == 0:
+    #     print('fine')
+    # else:
+    #     num = num + 1
     
-    plt.figure(figsize=(20,15))
+    plt.figure(figsize=(20,10))
     for i in multiple_rasters:
         for count in range(0,len(multiple_rasters[0])):
-         
+                print(len(multiple_rasters[0]))
+                if count > len(multiple_rasters[0]):
                 # #create figure
-                
-                pic = Image.open(i[count])
-                fig = matplotlib.pyplot.figure(1)   
-                plt.subplot(2, subplotcols, count+1)             
-                plt.axis('off')
-                plt.tight_layout()
-                plt.imshow(pic)
-                plt.savefig(save_to_path+'/'+'DOD Subplots.png',bbox_inches='tight')
+                    break
+                else:
+                    pic = Image.open(i[count])
+                    fig = matplotlib.pyplot.figure(1)   
+                    plt.subplot(2, subplotcols, count+1)  
+                    plt.text(0.0,0,'%s)'%(alphabet[count]),fontsize='large', va='bottom' )
+                    plt.axis('off')
+                    plt.tight_layout()
+                    plt.subplots_adjust(hspace=0, wspace=0)
+                    plt.imshow(pic)
+                    plt.savefig(save_to_path+'/'+'DOD Subplots.png',bbox_inches='tight')
   
                 
 def DODautumnsubplot(save_to_path, subplotcols):

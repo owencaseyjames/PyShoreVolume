@@ -121,44 +121,30 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
                 ##Reg plots
                 findropna['year']= findropna.index
                 findropna['yearplot'] = pd.to_datetime(findropna['year'], format="%Y%m%d")
-                # print(findropna['yearplot'])
-                findropna['years'] = findropna['year'].astype('float64')
-                # print(findropna)
+                
+                findropna['years'] = findropna['year'].astype('int')
+                print(findropna['years'])
                 sns.regplot(data=findropna, x= 'years', y='Distance from baseline')
                 plt.title("Transect %d" %i)
                 plt.show()
                 
-                ###Reg results 
-                
-                finlist = np.array(findropna['year'])
-                finlist.astype('float64')
-                # print(finlist)
-            
-                yvals = findropna['Distance from baseline'].values.reshape(-1,1)
-                xvals = finlist.reshape(-1,1)
-                
-                linfin = linreg.fit(xvals,yvals)
-                ypred  = linfin.predict(xvals)
-                linfin.score(xvals,yvals)
-                resid = yvals - ypred
-                meanres = np.mean(resid)
-                # print(i)
-                
-                
-                
-                ##Alternate stats model - results differ
+
+                ##Alternate stats model - results differ - scipy.
                 replaced=[]
                 for ins in findropna['yearplot']:
                     replaced.append(ins.replace(tzinfo=timezone.utc).timestamp())
-                # # print(replaced)    
+                print(replaced)    
+                
                 Ysm = findropna['Distance from baseline']
-                Xsm = replaced
+                Xsm = findropna['years']
                 result  = scipy.stats.linregress(Xsm, Ysm)
-                print(result.intercept, result)
+                print(result)
+                
                 
                 lrrresults[i] = {'Intercept':result.intercept,'Slope':result.slope, \
-                                  'R2':(result.rvalue ** 2),'Stderr':result.stderr}
-        
+                                  'R2':(result.rvalue ** 2),'Stderr':result.stderr, 'InterceptStErr':result.intercept_stderr, \
+                                    'PValue':result.pvalue}
+                
             else: 
                 continue
             # break
