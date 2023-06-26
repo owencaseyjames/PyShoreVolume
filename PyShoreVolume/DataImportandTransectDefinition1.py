@@ -35,7 +35,7 @@ class DataImportandTransectDefinition():
         return self.intersects
     
     def cleaning(self):
-        self.intersects = cleaning(self.intersects)
+        self.intersects = cleaning(self.intersects, self.CRS)
         return self.intersects
     
     def results(self):

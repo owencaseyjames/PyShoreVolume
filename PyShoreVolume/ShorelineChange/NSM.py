@@ -164,6 +164,7 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax, cax = cax)
                cbar.set_label('Change in Meters', rotation=270,fontsize = 13, labelpad = 12)
                ctx.add_basemap(ax, source=ctx.providers.Esri.WorldImagery, zoom=15)
+              
                ax.set_title('Net Shoreline Change', fontsize=15)
                ax.set_ylabel('Latitude', fontsize = 12)
                ax.set_xlabel('Longitude', fontsize=12)
