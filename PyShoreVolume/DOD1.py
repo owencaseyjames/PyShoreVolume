@@ -46,7 +46,7 @@ class DOD():
             def DEMofDifference(self):
                 dodres = DEMofDifference(self.path, self.DODCRS, self.save_to_path, self.pixelsize)
                 return dodres
-             #Isthereawaytocallsuplotsextensionsfromthesubplot as part of this method.
+             #Isthereawaytocallsubplotsextensionsfromthesubplot as part of this method.
             def DODSubPlot(self):
                 DODSubPlot(self.save_to_path, self.subplotcols)
            
@@ -55,7 +55,7 @@ class DOD():
                 return dodres
             
             def summerDOD(self):
-                dodres = summerDOD(self.path, self.pixelsize, self.save_to_path, self.DODCRS)            # def 
+                dodres = summerDOD(self.path, self.pixelsize, self.save_to_path, self.DODCRS)            
                 return dodres
             
             def autumnDOD(self):

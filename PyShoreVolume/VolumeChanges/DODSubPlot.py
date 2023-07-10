@@ -58,10 +58,8 @@ def DODSubPlot(save_to_path, subplotcols):
     
     plt.figure(figsize=(20,15))
     for i in multiple_rasters:
-        for count in range(0,len(multiple_rasters[0])):
-         
-                # #create figure
-                
+        for count in range(0,len(multiple_rasters[0])):         
+                               
                 pic = Image.open(i[count])
                 fig = matplotlib.pyplot.figure(1)   
                 plt.subplot(2, subplotcols, count+1)             
@@ -91,12 +89,10 @@ def DODautumnsubplot(save_to_path, subplotcols):
       
     for i in autumnresults:
         for count in range(0,len(autumnresults[0])):
-
   
         # #create figure            
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)    
-            # if num > 
             plt.subplot(1,subplotcols,count+1)          
             plt.axis('off')
             plt.tight_layout()
@@ -123,19 +119,13 @@ def DODspringsubplot(save_to_path, subplotcols):
     
     num = (len(sorted(glob.glob(save_to_path+"*spring.png")))-1) 
     plt.figure(figsize=(10,10))
-    
-    
+        
     for i in springresults:
         for count in range(0,len(springresults[0])):
-    
-        # #create figure
-            # print(i)
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)
-            plt.subplot(2,subplotcols, count+1)
-            
-            plt.axis('off')
-            # plt.tight_layout()
+            plt.subplot(2,subplotcols, count+1)            
+            plt.axis('off')            
             plt.imshow(pic)
             plt.subplots_adjust(hspace=0, wspace=0)
             plt.savefig(save_to_path+'/'+'DOD Spring Subplots.png',bbox_inches='tight')     
@@ -154,21 +144,16 @@ def DODsummersubplot(save_to_path, subplotcols):
     -------
     A combined subplot of elevation of difference models.
     """
-    summerresults = [sorted(glob.glob(save_to_path+"*summer.png"))]
-    
+    summerresults = [sorted(glob.glob(save_to_path+"*summer.png"))]    
     num = (len(sorted(glob.glob(save_to_path+"*summer.png")))-1) 
     plt.figure(figsize=(10,10))
+  
     for i in summerresults:
-        for count in range(0,len(summerresults[0])):
-   
-        # #create figure
-            
+        for count in range(0,len(summerresults[0])):               
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)
-            plt.subplot(2,subplotcols,count+1)
-            
-            plt.axis('off')
-            
+            plt.subplot(2,subplotcols,count+1)            
+            plt.axis('off')            
             plt.imshow(pic)
             plt.tight_layout()
             plt.subplots_adjust(hspace=0, wspace=0)
@@ -187,19 +172,15 @@ def DODwintersubplot(save_to_path, subplotcols):
     -------
     A combined subplot of elevation of difference models.
     """
-    winterresults = [sorted(glob.glob(save_to_path+"*winter.png"))]
-    
+    winterresults = [sorted(glob.glob(save_to_path+"*winter.png"))]    
     num = (len(sorted(glob.glob(save_to_path+"*winter.png")))-1) 
     plt.figure(figsize=(10,10))
+  
     for i in winterresults:
         for count in range(0,len(winterresults[0])):
-
-        
-        # #create figure
             pic = Image.open(i[count])
             fig = matplotlib.pyplot.figure(1)
-            plt.subplot(2,subplotcols,count+1)
-            
+            plt.subplot(2,subplotcols,count+1)            
             plt.axis('off')
             
             plt.tight_layout()

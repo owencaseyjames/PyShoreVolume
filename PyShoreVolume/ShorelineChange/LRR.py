@@ -32,8 +32,6 @@ from sklearn import linear_model
 from sklearn.linear_model import LinearRegression 
 from sklearn.metrics import r2_score, mean_squared_error
 
-
-
 import seaborn as sns
 
 import matplotlib
@@ -100,8 +98,7 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
         
                    geoms = np.vstack((geomsy,geomsx)).T
                    transgeoms = np.vstack((transgeometryy, transgeometryx)).T
-                   # print(transgeoms[0][0],transgeoms[0][1])
-        
+                          
                    ds = []
                    for i in geoms:             
                        ds.append(geopy.distance.distance((i[0],i[1]),(transgeoms[0][0],transgeoms[0][1]), ellipsoid = ellipsoidal).m)
@@ -120,19 +117,15 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
             if len(findropna.index) > 4:        
                 ##Reg plots
                 findropna['year']= findropna.index
-                findropna['yearplot'] = pd.to_datetime(findropna['year'], format="%Y%m%d")
-                # print(findropna['yearplot'])
+                findropna['yearplot'] = pd.to_datetime(findropna['year'], format="%Y%m%d")                
                 findropna['years'] = findropna['year'].astype('float64')
-                # print(findropna)
                 sns.regplot(data=findropna, x= 'years', y='Distance from baseline')
                 plt.title("Transect %d" %i)
                 plt.show()
                 
-                ###Reg results 
-                
+                ###Reg results   
                 finlist = np.array(findropna['year'])
                 finlist.astype('float64')
-                # print(finlist)
             
                 yvals = findropna['Distance from baseline'].values.reshape(-1,1)
                 xvals = finlist.reshape(-1,1)
@@ -142,26 +135,20 @@ def LRR(intersectednew, ellipsoidal, save_to_path):
                 linfin.score(xvals,yvals)
                 resid = yvals - ypred
                 meanres = np.mean(resid)
-                # print(i)
-                
-                
-                
+
                 ##Alternate stats model - results differ
                 replaced=[]
                 for ins in findropna['yearplot']:
-                    replaced.append(ins.replace(tzinfo=timezone.utc).timestamp())
-                # # print(replaced)    
+                    replaced.append(ins.replace(tzinfo=timezone.utc).timestamp())  
                 Ysm = findropna['Distance from baseline']
                 Xsm = replaced
                 result  = scipy.stats.linregress(Xsm, Ysm)
                 print(result.intercept, result)
                 
                 lrrresults[i] = {'Intercept':result.intercept,'Slope':result.slope, \
-                                  'R2':(result.rvalue ** 2),'Stderr':result.stderr}
-        
+                                  'R2':(result.rvalue ** 2),'Stderr':result.stderr}        
             else: 
                 continue
-            # break
         with open (save_to_path+'/lrrdictionary.pkl', 'wb') as fb:
             pickle.dump(lrrresults, fb, protocol = pickle.HIGHEST_PROTOCOL)
             

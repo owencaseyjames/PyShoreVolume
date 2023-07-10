@@ -24,7 +24,6 @@ import fiona
 
 from matplotlib import pyplot as plt
 
-
 def MaskingDEM(path, MaskingCRS, DODCRS):
     """
     Crops the DEM's using prior made vector shapefile and masks regions outside
@@ -41,7 +40,8 @@ def MaskingDEM(path, MaskingCRS, DODCRS):
     for i in sorted(globresults):
         file = rio.open(i)
         date = (i[-10:-4])
-    ###Apply mask and crop using shapefile
+        
+        ###Apply mask and crop using shapefile
         out_image, out_transform = rasterio.mask.mask(file, shapes, crop=True, filled = True, nodata = -9999.0)
         out_meta = file.meta
         
