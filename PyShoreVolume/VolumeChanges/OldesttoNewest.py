@@ -113,8 +113,7 @@ def OldesttoNewest(path, save_to_path, DODCRS):
                 
 
             elif new.shape < old.shape:
-                  ## Use the bounding box of the newer raster - making shapefile to clip by
-                 
+                  ## Use the bounding box of the newer raster - making shapefile to clip by                 
                   boundbox  = newer.bounds
                   geom = box(*boundbox)
                   df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
