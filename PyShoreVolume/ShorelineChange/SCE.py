@@ -68,7 +68,7 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                         
                                 uniquetrans = intersectednew.TR_ID.unique()
                                 for e, ids in enumerate(uniquetrans):
-                                    # if ids == val:            
+                                            
                                         s = intersectednew.loc[intersectednew['TR_ID'] == ids]
                                         s = s.sort_values('layer')
                                         transectsvalx = np.array(s['geometry_x'].x)
@@ -100,11 +100,12 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         #Transform for mapping
                                         firstdata = firstdata.to_crs(3857)
                                         seconddata = seconddata.to_crs(3857)
-####This dictionary isnt needed >
+
+                                        ##Saves coords and distances in dictionary
                                         scedic[ids] = {'First coordinate':coordinate1,'Second coordinate':coordinate2, 
                                                        'Transect':ids,'Distances': distances, 'Newest date': firstyear, 
                                                        'Oldest date':secondyear} 
-                                        ##Saves coords and distances in dictionary
+                                        
                                     
                                         coordx.append(firstdata['geometry'].x)
                                         coordy.append(firstdata['geometry'].y)
@@ -114,9 +115,7 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         distances1.append(distances)
                                         trid.append(ids)
                                         trid.append(ids)
-                                            
-
-                                
+                                                                         
                                 norm = matplotlib.colors.Normalize(vmin = min(distances1), vmax= max(distances1), clip = True)
                                 cmaps= plt.get_cmap('viridis')
                                 c = cmaps(norm(distances1))
@@ -127,8 +126,7 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                     ax.plot(coordx[i:i+2],coordy[i:i+2],marker = None, c=c[i])
                                 for ins in range(0,len(trid),trloc):                    
                                     ax.annotate(trid[ins], (coordx[ins], coordy[ins]))                              
-                                
-                                
+                                                                
                                 divider = make_axes_locatable(ax)
                                 cax = divider.append_axes("right", size="5%", pad=0.05)    
                                 cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax, cax = cax)
