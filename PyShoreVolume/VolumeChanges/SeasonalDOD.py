@@ -13,7 +13,6 @@ from rasterio.plot import show , show_hist
 import glob
 
 import fiona
-# import rioxarray
 
 import geopandas as gpd
 from geopandas import GeoSeries, GeoDataFrame
@@ -24,7 +23,6 @@ import scipy
 from scipy.spatial.distance import cdist, pdist
 
 import numpy as np
-
 
 import shapely
 from shapely.geometry import Point, MultiPoint, box
@@ -89,19 +87,16 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                             
                             older = rio.open(i)
                             newer = rio.open(seasonfile[seasonfile.index(i)- len(seasonfile)+1])
-                
-                
+                                
                             date1 = (i[-16:-10])
                             date2 = (seasonfile[seasonfile.index(i)- len(seasonfile)+1][-16:-10])
                             
                             new = np.array(newer.read(1),dtype = rasterio.float32)             
                             old = np.array(older.read(1),dtype = rasterio.float32)
-                
-                    
+                                    
                             if old.shape == new.shape: 
                                 
-                                ###MASK AND SUB FUNC
-                            
+                                ###MASK AND SUB FUNC                           
                                 x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
                 
                                 imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
@@ -121,14 +116,11 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                                       dest.write(x.filled(fill_value = -9999.0), 1)
                                       dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
 
-                                ###PLOT FUNC
-                                
+                                ###PLOT FUNC                               
                                 lidardem = rio.open(path+date1+date2+'autumn.tif')
-                                lidardem1 = np.array(lidardem.read(1))
-                             
+                                lidardem1 = np.array(lidardem.read(1))                             
                                 lidardem1 = np.ma.array(lidardem1, mask=(mask))
-                                
-  
+
                                 #Plot
                                 fig = matplotlib.pyplot.figure()
                                 ax = fig.add_subplot(1,1,1)
@@ -153,25 +145,21 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
 
      
                             elif new.shape < old.shape:
-                                 
-                                  ## Use the bounding box of the newer raster - making shapefile to clip by
-                                  
                                   boundbox  = newer.bounds
                                   geom = box(*boundbox)
                                   df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
                                  
-                                  #   ###Shapefile
+                                  #Shapefile
                                   df.to_file(path+'boundary.shp')
                                   with fiona.open(path+'boundary.shp','r') as shapefile:
                                         shapes = [feature['geometry'] for feature in shapefile]
 
-                                    ###Clip older mask by newer shapefile
+                                  #Clip older mask by newer shapefile
                                   out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True,  nodata = -9999.0)
                                   out_meta = newer.meta
                 
                                   out_meta.update({'driver':'GTiff', 'count':1,'height':newer.shape[0],'width':newer.shape[1],'transform':out_transform})
-                                  ###maybe change height according to new shape and old shape.
-                                    
+                                                                      
                                   with rio.open(path+date1+date2+'bounding.tif','w', **out_meta) as dest:
                                           dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
                                           dest.write(out_image)
@@ -179,16 +167,12 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                 
                                   old = np.array(olderimage.read(1),dtype = rasterio.float32)
                                   
-                                  
-                                  
                                   imagenewmask = np.ma.array(new, mask = (new == -9999.0))
                                   imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
-
-                               
+            
                                   imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                                   imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-                
-                                  
+                                    
                                   mask1 = np.ma.getmask(imagenewmask)
                                   mask2 = np.ma.getmask(imageoldmask)
                             
@@ -205,13 +189,11 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                                   lidardem = rio.open(path+date1+date2+'autumn.tif')
                                   lidardem1 = np.array(lidardem.read(1))
                                   lidardem1 = np.ma.array(lidardem1, mask=(mask))
-                                  
-                                  
+                                                                    
                                   #Plot
                                   fig = matplotlib.pyplot.figure()
                                   ax = fig.add_subplot(1,1,1)
                                   
-
                                   norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
                                   show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,)
                                   ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)
@@ -349,19 +331,16 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                             
                             older = rio.open(i)
                             newer = rio.open(seasonfile[seasonfile.index(i)- len(seasonfile)+1])
-                
-                
+                                
                             date1 = (i[-16:-10])
                             date2 = (seasonfile[seasonfile.index(i)- len(seasonfile)+1][-16:-10])
                 
                             new = np.array(newer.read(1),dtype = rasterio.float32)             
                             old = np.array(older.read(1),dtype = rasterio.float32)
-                
-                    
+                                    
                             if old.shape == new.shape: 
                                 
-                                ###MASK AND SUB FUNC
-                            
+                                ###MASK AND SUB FUNC                            
                                 x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
                 
                                 imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
@@ -380,14 +359,11 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                 with rio.open(path+date1+date2+'winter.tif','w',**out_meta) as dest:
                                       dest.write(x.filled(fill_value = -9999.0), 1)
                                       dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)     
-                               
-                                
-                                
+                                                                                             
                                 ###PLOT FUNC
                                 
                                 lidardem = rio.open(path+date1+date2+'winter.tif')
                                 lidardem1 = np.array(lidardem.read(1))
-
                                 lidardem1 = np.ma.array(lidardem1, mask=(mask))
                                 
                                 #Plot
@@ -406,8 +382,7 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                 plt.show()
                                 show_hist(lidardem1, bins=10, histtype='stepfilled', lw=0.0, stacked=True, alpha=0.3)
                                 fig.savefig(save_to_path+'/'+date1+date2+'winter.png',bbox_inches='tight')
-                                
-                                
+                                                                
                                 #Volume
                                 vols = lidardem1 * pixelsize
                                 print("\nThe total volume of change is \n", np.sum(vols), "\n(m3)\n")
@@ -420,7 +395,7 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                   geom = box(*boundbox)
                                   df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
                                 
-                                  #   ###Shapefile
+                                  #Shapefile
                                   df.to_file(path+'boundary.shp')
                                   with fiona.open(path+'boundary.shp','r') as shapefile:
                                         shapes = [feature['geometry'] for feature in shapefile]
@@ -429,8 +404,7 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                   out_meta = newer.meta
                 
                                   out_meta.update({'driver':'GTiff', 'count':1,'height':newer.shape[0],'width':newer.shape[1],'transform':out_transform})
-                                  ###maybe change height according to new shape and old shape.
-                                    
+                                                                      
                                   with rio.open(path+date1+date2+'bounding.tif','w', **out_meta) as dest:
                                           dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
                                           dest.write(out_image)
@@ -438,14 +412,11 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                 
                                   old = np.array(olderimage.read(1),dtype = rasterio.float32)
                                   
-                                  
-                                  
                                   imagenewmask = np.ma.array(new, mask = (new == -9999.0))
                                   imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
                                
                                   imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                                   imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-                
                                   
                                   mask1 = np.ma.getmask(imagenewmask)
                                   mask2 = np.ma.getmask(imageoldmask)
@@ -464,10 +435,8 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                   lidardem1 = np.array(lidardem.read(1))
                                   lidardem1 = np.ma.array(lidardem1, mask=(mask))
                                   
-                                  
                                   fig = matplotlib.pyplot.figure()
                                   ax = fig.add_subplot(1,1,1) 
-                                  
                                   
                                   norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
                                   show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) 
@@ -485,10 +454,8 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                   vols = lidardem1 * pixelsize
                                   print("\nThe total volume of change is \n", np.sum(vols), "\n(m3)\n")
 
-                            elif new.shape > old.shape:   
-
-                                  
-                                    ##Older bounding box shape
+                            elif new.shape > old.shape:               
+                                  #Older bounding box shape
                                   x = np.empty(older.read(1).shape, dtype = rasterio.float32)
                                   
                                   boundbox  = older.bounds
@@ -498,8 +465,7 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                   df.to_file(path+'boundary.shp')
                                   with fiona.open(path+'boundary.shp','r') as shapefile:
                                       shapes = [feature['geometry'] for feature in shapefile]
-                                      
-                
+                                                      
                                   out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999.0)
                                   
                                   out_meta = older.meta
@@ -519,8 +485,7 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                 
                                   imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                                   imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-                
-                                  
+                                                  
                                   mask1 = np.ma.getmask(imagenewmask)
                                   mask2 = np.ma.getmask(imageoldmask)
                             
@@ -537,12 +502,10 @@ def winterDOD(path, pixelsize, save_to_path, DODCRS):
                                   lidardem = rio.open(path+date1+date2+'winter.tif')
                                   lidardem1 = np.array(lidardem.read(1))
                                   lidardem1 = np.ma.array(lidardem1, mask=(mask))
-
                                   
                                   fig = matplotlib.pyplot.figure()
                                   ax = fig.add_subplot(1,1,1) 
-                                  
-                                  
+                                                                    
                                   norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
                                   show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) 
 
@@ -587,15 +550,13 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
                     
                     older = rio.open(i)
                     newer = rio.open(seasonfile[seasonfile.index(i)- len(seasonfile)+1])
-        
-        
+                
                     date1 = (i[-16:-10])
                     date2 = (seasonfile[seasonfile.index(i)- len(seasonfile)+1][-16:-10])
                     
                     new = np.array(newer.read(1),dtype = rasterio.float32)             
                     old = np.array(older.read(1),dtype = rasterio.float32)
-        
-            
+                    
                     if old.shape == new.shape: 
                         
                         ###MASK AND SUB FUNC
@@ -645,21 +606,18 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
                         vols = lidardem1 * pixelsize
                         print("\nThe total volume of change is \n", np.sum(vols), "\n(m3)\n")
 
-
                     elif new.shape < old.shape:
-                          print('elif 1')
-                          ## Use the bounding box of the newer raster - making shapefile to clip by
                           
                           boundbox  = newer.bounds
                           geom = box(*boundbox)
                           df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
                           
-                          #   ###Shapefile
+                          #Shapefile
                           df.to_file(path+'boundary.shp')
                           with fiona.open(path+'boundary.shp','r') as shapefile:
                                 shapes = [feature['geometry'] for feature in shapefile]
 
-                            ###Clip older mask by newer shapefile
+                          #Clip older mask by newer shapefile
                           out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True,  nodata = -9999.0)
                           out_meta = newer.meta
         
@@ -673,15 +631,12 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
         
                           old = np.array(olderimage.read(1),dtype = rasterio.float32)
                           
-
                           imagenewmask = np.ma.array(new, mask = (new == -9999.0))
                           imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
-
                        
                           imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                           imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-        
-                          
+                                  
                           mask1 = np.ma.getmask(imagenewmask)
                           mask2 = np.ma.getmask(imageoldmask)
                     
@@ -698,14 +653,11 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
                           lidardem = rio.open(path+date1+date2+'spring.tif')
                           lidardem1 = np.array(lidardem.read(1))
                           lidardem1 = np.ma.array(lidardem1, mask=(mask))
-                          
-                          
+                                                    
                           #Plot
                           fig = matplotlib.pyplot.figure()
                           ax = fig.add_subplot(1,1,1)
-                          
-                          
-                          
+                                                                            
                           norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()))
                           show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,)
                           ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10)
@@ -725,19 +677,17 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
 
                     elif new.shape > old.shape:   
 
-                          print('elif2')
-                            ##Older bounding box shape
+                          
+                          #Older bounding box shape
                           x = np.empty(older.read(1).shape, dtype = rasterio.float32)
                           
                           boundbox  = older.bounds
                           geom = box(*boundbox)
-                          df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
-                          # df = df.set_crs(DODCRS)
+                          df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})                          
                           df.to_file(path+'boundary.shp')
                           with fiona.open(path+'boundary.shp','r') as shapefile:
                               shapes = [feature['geometry'] for feature in shapefile]
-                              
-        
+                                      
                           out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999.0)
                           
                           out_meta = older.meta
@@ -758,7 +708,6 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
                           imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                           imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
         
-
                           mask1 = np.ma.getmask(imagenewmask)
                           mask2 = np.ma.getmask(imageoldmask)
                     
@@ -775,12 +724,10 @@ def springDOD(path, pixelsize, save_to_path, DODCRS):
                           lidardem = rio.open(path+date1+date2+'spring.tif') 
                           lidardem1 = np.array(lidardem.read(1))        
                           lidardem1 = np.ma.array(lidardem1, mask=(mask))
-                          
-                          
+                                                    
                           fig = matplotlib.pyplot.figure()
                           ax = fig.add_subplot(1,1,1) 
-                        
-                    
+                                            
                           norm = matplotlib.colors.TwoSlopeNorm(vmin = int(lidardem1.min()), vcenter = 0, vmax= int(lidardem1.max()) )                        
                           show((lidardem1) , ax = ax, cmap='seismic_r',norm = norm, transform = lidardem.transform,) 
 
@@ -860,15 +807,12 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                                 out_meta = newer.meta
                                 with rio.open(path+date1+date2+'summer.tif','w',**out_meta) as dest:
                                       dest.write(x.filled(fill_value = -9999.0), 1)
-            
-                                
-                                ###PLOT FUNC
-                                
+                                            
+                                ###PLOT FUNC                                
                                 lidardem = rio.open(path+date1+date2+'summer.tif')
                                 lidardem1 = np.array(lidardem.read(1))
                                 lidardem1 = np.ma.array(lidardem1, mask=(mask))
                                 
-
                                 fig = matplotlib.pyplot.figure()
                                 ax = fig.add_subplot(1,1,1)
                           
@@ -897,12 +841,12 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                                   geom = box(*boundbox)
                                   df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
                                  
-                                  #   ###Shapefile
+                                  #Shapefile
                                   df.to_file(path+'boundary.shp')
                                   with fiona.open(path+'boundary.shp','r') as shapefile:
                                         shapes = [feature['geometry'] for feature in shapefile]
 
-                                    ###Clip older mask by newer shapefile
+                                  #Clip older mask by newer shapefile
                                   out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True,  nodata = -9999.0)
                                   out_meta = newer.meta
                 
@@ -916,15 +860,12 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                 
                                   old = np.array(olderimage.read(1),dtype = rasterio.float32)
                                   
-
                                   imagenewmask = np.ma.array(new, mask = (new == -9999.0))
                                   imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
-
                                
                                   imageoldmask = np.ma.array(old, mask = (old == -9999.0))
                                   imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-                
-                                  
+                                                  
                                   mask1 = np.ma.getmask(imagenewmask)
                                   mask2 = np.ma.getmask(imageoldmask)
                             
@@ -939,13 +880,10 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                                       dest.write(x.filled(fill_value = -9999.0), 1)
                                       dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
                                       
-                                  lidardem = rio.open(path+date1+date2+'summer.tif')
-                                  
-                                  lidardem1 = np.array(lidardem.read(1))
-                 
+                                  lidardem = rio.open(path+date1+date2+'summer.tif')                                  
+                                  lidardem1 = np.array(lidardem.read(1))                 
                                   lidardem1 = np.ma.array(lidardem1, mask=(mask))
                                   
-
                                   fig = matplotlib.pyplot.figure()
                                   ax = fig.add_subplot(1,1,1)
                                   
@@ -965,9 +903,7 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                                   print("\nThe total volume of change is \n", np.sum(vols), "\n(m3)\n")
 
                             elif new.shape > old.shape:   
-                                
-                                  print('elif2')
-                                    ##Older bounding box shape
+                              
                                   x = np.empty(older.read(1).shape, dtype = rasterio.float32)
                                   
                                   boundbox  = older.bounds
@@ -977,12 +913,9 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                                   df.to_file(path+'boundary.shp')
                                   with fiona.open(path+'boundary.shp','r') as shapefile:
                                       shapes = [feature['geometry'] for feature in shapefile]
-                                      
-                
-                                  out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999.0)
-                                  
-                                  out_meta = older.meta
-                
+                                                      
+                                  out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999.0)                                  
+                                  out_meta = older.meta               
                                   out_meta.update({'driver':'GTiff','count':1, 'height':older.shape[0],'width':older.shape[1],'transform':out_transform})
                                
                                   with rio.open(path+date1+date2+'bounding.tif','w', **out_meta) as dest:
@@ -1045,7 +978,7 @@ def summerDOD(path, pixelsize, save_to_path, DODCRS):
                 DOD  = pd.DataFrame(summerdic)
                 DOD = DOD.T
                 return  DOD   
-#%%
+
 def autumnDOD(path, pixelsize, save_to_path, DODCRS):
             maskglobresults = [sorted(glob.glob(path+"*masked.tif"))]
             
@@ -1067,19 +1000,16 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                         
                         older = rio.open(i)
                         newer = rio.open(seasonfile[seasonfile.index(i)- len(seasonfile)+1])
-            
-            
+                        
                         date1 = (i[-16:-10])
                         date2 = (seasonfile[seasonfile.index(i)- len(seasonfile)+1][-16:-10])
             
                         new = np.array(newer.read(1),dtype = rasterio.float32)             
                         old = np.array(older.read(1),dtype = rasterio.float32)
-            
-                
+                           
                         if old.shape == new.shape: 
                             
-                             ###MASK AND SUB FUNC
-                        
+                             ###MASK AND SUB FUNC                       
                               x = np.empty(newer.read(1).shape, dtype = rasterio.float32)
             
                               imagenewmask = np.ma.array(new, mask = ((new == -9999.0)|(new == 0.0)))
@@ -1098,7 +1028,6 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                               with rio.open(path+date1+date2+'autumn.tif','w',**out_meta) as dest:
                                     dest.write(x.filled(fill_value = -9999.0), 1)
                                     dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
-
                             
                             ###PLOT FUNC
                              
@@ -1106,7 +1035,6 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                               lidardem1 = np.array(lidardem.read(1))
                               lidardem1 = np.ma.array(lidardem1, mask=(mask))
                             
-
                               fig = matplotlib.pyplot.figure()
                               ax = fig.add_subplot(1,1,1)
                       
@@ -1127,24 +1055,23 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                               DODdic[date1+'-'+date2] = {'Volumes': np.sum(vols), 'Date':['%s - %s' %(date1[4:7]+'/'+date1[0:4], date2[4:7]+'/'+date2[0:4])]} 
 
                         elif new.shape < old.shape:
-                              print('elif 1')
-                              ## Use the bounding box of the newer raster - making shapefile to clip by
-                              
+
                               boundbox  = newer.bounds
                               geom = box(*boundbox)
                               df = gpd.GeoDataFrame({'id':1,'geometry':[geom]})
                               df = df.set_crs(DODCRS)
-                              #   ###Shapefile
+                          
+                              #Shapefile
                               df.to_file(path+'boundary.shp')
                               with fiona.open(path+'boundary.shp','r') as shapefile:
                                     shapes = [feature['geometry'] for feature in shapefile]
          
-                                ###Clip older mask by newer shapefile
+                              #Clip older mask by newer shapefile
                               out_image, out_transform = rasterio.mask.mask(older, shapes, crop=True, filled = True,  nodata = -9999.0)
                               out_meta = newer.meta
             
                               out_meta.update({'driver':'GTiff',"count":1, 'height':newer.shape[0],'width':newer.shape[1],'transform':out_transform})
-                              ###maybe change height according to new shape and old shape.
+                              
                                 
                               with rio.open(path+date1+date2+'bounding.tif','w', **out_meta) as dest:
                                       dest.crs = rasterio.crs.CRS.from_epsg(DODCRS)
@@ -1177,8 +1104,7 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
              
                               lidardem1 = np.ma.array(lidardem1, mask=(mask))
                               fig, ax = plt.subplots(1, figsize=(5,5)) 
-                              
-                              
+                                                            
                               norm = matplotlib.colors.TwoSlopeNorm(vmin = lidardem1.min(), vcenter = 0, vmax= lidardem1.max())
                               show((lidardem1) , ax = ax, cmap='seismic_r', norm = norm, transform = lidardem.transform,)
                               ax.set_title('DOD %s - %s' %(date1[4:7]+"/"+date1[0:4], date2[4:7]+"/"+date2[0:4]),fontsize=10) 
@@ -1194,9 +1120,7 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                               DODdic[date1+'-'+date2] = {'Volumes': np.sum(vols), 'Date':['%s - %s' %(date1[4:7]+'/'+date1[0:4], date2[4:7]+'/'+date2[0:4])]} 
 
                         elif new.shape > old.shape:   
-                            
-                              print('elif2')
-                                ##Older bounding box shape
+
                               x = np.empty(older.read(1).shape, dtype = rasterio.float32)
                               
                               boundbox  = older.bounds
@@ -1206,8 +1130,7 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                               df.to_file(path+'boundary.shp')
                               with fiona.open(path+'boundary.shp','r') as shapefile:
                                   shapes = [feature['geometry'] for feature in shapefile]
-                                  
-            
+                                             
                               out_image, out_transform = rasterio.mask.mask(newer, shapes, crop=True, filled = True, nodata = -9999.0)
                               
                               out_meta = older.meta
@@ -1226,8 +1149,7 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                               imagenewmask = np.ma.array(imagenewmask, mask = (imagenewmask == 0.0))
             
                               imageoldmask = np.ma.array(old, mask = (old == -9999.0))
-                              imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))
-            
+                              imageoldmask = np.ma.array(imageoldmask, mask = (imageoldmask == 0.0))            
 
                               mask1 = np.ma.getmask(imagenewmask)
                               mask2 = np.ma.getmask(imageoldmask)
@@ -1242,8 +1164,7 @@ def autumnDOD(path, pixelsize, save_to_path, DODCRS):
                                   dest.write(x.filled(fill_value = -9999.0), 1)    
                               
                               lidardem = rio.open(path+date1+date2+'autumn.tif')
-                              
-                              
+                                                           
                               lidardem1 = np.array(lidardem.read(1))
                               masky = lidardem.read_masks(1)
             
