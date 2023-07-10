@@ -94,11 +94,9 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                uniquetrans = intersectednew.TR_ID.unique()
                trloc = math.ceil((max(intersectednew['TR_ID'])/transectplot)/2)*2
 
-               for e, ids in enumerate(uniquetrans):
-                        # print(ids)
-                       # if val == e:             
+               for e, ids in enumerate(uniquetrans):        
                           s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
-                          # print(s.columns)ko
+                          
                           newestdate = max(s['layer'])
                           oldestdate = min(s['layer'])
                           for i in s['layer']:
@@ -131,8 +129,6 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                           coordinate2 = (np.array(seconddata['geometry'].y), np.array(seconddata['geometry'].x))
                           distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m
                            
-                          
-                            
                           nsmdic[ids] = {'Newest date coords':coordinate1,'Newest date':newestdate, 'Oldest date':oldestdate, \
                                         'Oldest date coords':coordinate2, 'Distances':distances, 'Transect':ids}
                           firstdata = firstdata.to_crs(3857)
@@ -171,7 +167,6 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                plt.show()         
                fig.savefig(save_to_path+'/netshorelinemovement.png',bbox_inches='tight')
 
-
                with open (save_to_path+'/nsm.pkl', 'wb') as fb:
                    pickle.dump(nsmdic, fb, protocol = pickle.HIGHEST_PROTOCOL)
               
@@ -179,4 +174,4 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                nsmdic = nsmdic.T
                
                return nsmdic
-               # print( min(distances1), max(distances1)) 
+               
