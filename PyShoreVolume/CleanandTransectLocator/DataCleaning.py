@@ -104,7 +104,6 @@ def cleaning(intersected, CRS):
                     yeardrop = s.loc[s['layer']==i]
                     trs = tr.iloc[0]
                     dists = yeardrop['geometry_x'].distance(trs['geometry_y'])
-                    print('This is:', dists)
                     gdf1 = intersected.loc[dists.idxmin()]
                     gdf1 = gdf1.T
                     dicty = {}
