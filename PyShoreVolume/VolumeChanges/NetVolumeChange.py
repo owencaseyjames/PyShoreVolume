@@ -22,7 +22,6 @@ from rasterio.plot import show , show_hist
 import glob
 
 import fiona
-# import rioxarray
 
 import geopandas as gpd
 from geopandas import GeoSeries, GeoDataFrame
