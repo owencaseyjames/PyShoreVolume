@@ -208,6 +208,8 @@ OceanographicPlot(save_to_path = results, SurveyDates = surveydates , Volumes = 
 
 Out:
 ```
+![Waveseries](https://github.com/owencaseyjames/PyShoreVolume/assets/103570277/e751023f-94fc-4378-8b44-a175ca2aaa38)
+
 
 
 # References 
