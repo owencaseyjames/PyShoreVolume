@@ -184,7 +184,7 @@ figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:43
 SauntonDOD.Masking()
  
 #DEM of Difference function. 
-SauntonDEMoDResults = PORTHDOD.DEMofDifference()
+SauntonDODResults = SauntonDOD.DEMofDifference()
  
 #Subplot DEMofDifference result figures. 
 SauntonDOD.DODSubPlot()
@@ -200,6 +200,14 @@ Out:
 +51846.69 (m3)
 ```
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
+
+An Oceanographic plot function is available that allows you to plot the volumetric changes in a four panel time series with a time series of 3 wave parameters: Height, Direction, Period. The function plots the both the raw time series and the monthly averages, which are calculated as part of the function. The user can plot the dates of each DEM survey on each panel by providing the dates in a pandas DataFrame with a datetime[ns] dtype. The oceanographic data can be provided as a pandas DataFrame with the column names 'Direction(d),Height(m), Period(s) and  Date/Time'. The DataFrame output from the DOD function can be fed directly into the Volume arguments. 
+
+```
+OceanographicPlot(save_to_path = results, SurveyDates = surveydates , Volumes = SauntonDODResults, Oceanographic = oceanographic, FigWidth = 12, FigHeight = 10, FontSize = 7, LineWidth = 0.1, SurveyDateLineWidth = 0.7, AxLegendFontSize = 9, AxTickParams = 9, LegendLoc = 'upper left', BottomAxis = 12, BeachVolumeName = ['Saunton'])
+
+Out:
+```
 
 
 # References 
