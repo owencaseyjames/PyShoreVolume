@@ -10,6 +10,8 @@ A Python Package for the production of shoreline and beach volumetric change sta
 
 ![DOD Subplots](https://user-images.githubusercontent.com/103570277/229829778-fed9f91b-dc0d-4bd5-b68f-d7d6650b2467.png)
 
+![Waveseries](https://github.com/owencaseyjames/PyShoreVolume/assets/103570277/22ebc9aa-8283-4af8-afe7-2bdc86078980)
+
 # Functions 
 
 This package offers the ability to perform 5 well established Shoreline Change Analysis functions from transect based shoreline intersection shapefiles (Burningham and Fernandez-Nunez, 2020). The functions produce a full set of associated statistics for each transect in the form of a Pandas DataFrame, along with a graphical production of the shoreline change transects plotted on a satellite image of the region under analysis. 
