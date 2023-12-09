@@ -23,11 +23,13 @@ from PyShoreVolume.VolumeChanges import SeasonalDOD
 
 from PyShoreVolume.VolumeChanges import winterDOD, springDOD, summerDOD, autumnDOD
 
+
+
 class DOD():
     
             def __init__(self, subplotcols, titlesize, pixelsize, 
                          DODCRS, figwidth, figheight,
-                         save_to_path, path, MaskingCRS, measurementerror):
+                         save_to_path, path, MaskingCRS, measurementerror, beachlength):
                 
                 self.subplotcols = subplotcols 
                 self.titlesize = titlesize 
@@ -39,14 +41,15 @@ class DOD():
                 self.path = path
                 self.MaskingCRS = MaskingCRS
                 self.measurementerror = measurementerror
+                self.beachlength = beachlength
            
             def Masking(self):
                 MaskingDEM(self.path, self.MaskingCRS, self.DODCRS)
             
             def DEMofDifference(self):
-                dodres = DEMofDifference(self.path, self.DODCRS, self.save_to_path, self.pixelsize)
+                dodres = DEMofDifference(self.path, self.DODCRS, self.save_to_path, self.pixelsize, self.measurementerror, self.beachlength)
                 return dodres
-             #Isthereawaytocallsubplotsextensionsfromthesubplot as part of this method.
+             #Isthereawaytocallsuplotsextensionsfromthesubplot as part of this method.
             def DODSubPlot(self):
                 DODSubPlot(self.save_to_path, self.subplotcols)
            
@@ -55,7 +58,7 @@ class DOD():
                 return dodres
             
             def summerDOD(self):
-                dodres = summerDOD(self.path, self.pixelsize, self.save_to_path, self.DODCRS)            
+                dodres = summerDOD(self.path, self.pixelsize, self.save_to_path, self.DODCRS)            # def 
                 return dodres
             
             def autumnDOD(self):
@@ -84,6 +87,8 @@ class DOD():
            
             def OldesttoNewest(self):
                 OldesttoNewest(self.path, self.save_to_path, self.DODCRS)
+                
+            
                 
           
                        

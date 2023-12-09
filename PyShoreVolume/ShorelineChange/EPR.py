@@ -87,17 +87,23 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
 
 
                     for e, ids in enumerate(uniquetrans):
+                        # if e == val:      
+                            # print(val, e, ids)
 
                             s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
+                            # print(s['layer'])
                             newestdate = max(s['layer'])
                             oldestdate = min(s['layer'])
+                            
                             
                             newestdatedate = datetime(year=int(newestdate[0:4]), month=int(newestdate[4:6]), day = int(newestdate[6:8]))
                             oldestdatedate = datetime(year=int(oldestdate[0:4]), month=int(oldestdate[4:6]), day = int(oldestdate[6:8]))
                             
                             transy = np.array(s['Y'])
                             transx = np.array(s['X'])
-              
+                            
+                            
+                                              
                             for i in s['layer']:
                                 if i == oldestdate:
                                     oldgeoms = s.loc[s['layer']==i]
@@ -133,9 +139,10 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                             distances = geopy.distance.geodesic(coordinate1,coordinate2, ellipsoid = ellipsoidal).m                           
                             
                             timediff = pd.Series(newestdatedate - oldestdatedate)/pd.to_timedelta(1, unit='D')
+                            # print(timediff)
                             timelength = timediff[0]/365.2425
       
-                            #####JUST FOR CORR AGAINST AMBUR!!!######
+                            #####JJUST FOR CORR AGAINST AMBUR!!!######
                             euceprresult = distancesbetweendates/timelength
                             
                             #ERROR
@@ -149,9 +156,9 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                             olderr = float(georeferencingerrorold + measurementerrorold)
                             
                             ##Actual distance. 
-                            eprresult = distances/timelength    
+                            eprresult = distances/timelength
+                            
                             eprerror = (math.sqrt((newerr ** 2)+(olderr ** 2)))/timelength
-                     
                             ##distance to transects (allows a +/- to be given to EPR Calculation)
                             distanceold = cdist(olddatedatageoms, transgeoms, 'euclidean')
                             distancenew = cdist(newdatedatageoms, transgeoms, 'euclidean')
@@ -166,13 +173,18 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                                 euceprresult = -abs(euceprresult[0][0])                               
                                 distancesbetweendates = -abs(distancesbetweendates[0][0])                             
                                 distances = -abs(distances)
-         
+                               
+  
+                                
                             else:
                                 eprresult = eprresult
                                 distancesbetweendates = distancesbetweendates[0][0]
                                 euceprresult = euceprresult[0][0]
+    
+                            # eprerrorpos = eprresult + eprerror
+                            # eprerrorneg = eprresult - eprerror    
                             
-                            
+                            # print(olddatedatageoms[location[1][0]])
                             eprdic[ids]= { 'Oldest date coords': coordinate1,'Oldest date':oldestdatedate,
                                           'Newest date coords':coordinate2, 'Newest date': newestdatedate, 
                                           'EPR':eprresult, 'Euclidean EPR':euceprresult, 'Transect':ids,'Total distance':distances,
@@ -213,7 +225,8 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                     print("\nMinimum End Point Rate (Erosion) : \n", min(eprvals))
                     with open (save_to_path+'/eprresults.pkl', 'wb') as fb:
                         pickle.dump(eprdic, fb, protocol = pickle.HIGHEST_PROTOCOL)
-                                        
+                    
+                    
                     eprdic = pd.DataFrame(eprdic)
                     eprdic = eprdic.T
                     

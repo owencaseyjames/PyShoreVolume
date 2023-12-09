@@ -16,6 +16,7 @@ Created on Sun Jan  8 09:33:45 2023
 ################################################################
 
 import rasterio as rio
+from rasterio.crs import CRS
 import rasterio.mask
 
 import glob
@@ -23,6 +24,7 @@ import glob
 import fiona
 
 from matplotlib import pyplot as plt
+
 
 def MaskingDEM(path, MaskingCRS, DODCRS):
     """
@@ -39,9 +41,8 @@ def MaskingDEM(path, MaskingCRS, DODCRS):
     globresults = glob.glob(path+"*.tif")
     for i in sorted(globresults):
         file = rio.open(i)
-        date = (i[-10:-4])
-        
-        ###Apply mask and crop using shapefile
+        date = (i[-12:-4])
+    ###Apply mask and crop using shapefile
         out_image, out_transform = rasterio.mask.mask(file, shapes, crop=True, filled = True, nodata = -9999.0)
         out_meta = file.meta
         

@@ -22,6 +22,7 @@ from rasterio.plot import show , show_hist
 import glob
 
 import fiona
+# import rioxarray
 
 import geopandas as gpd
 from geopandas import GeoSeries, GeoDataFrame
@@ -70,8 +71,8 @@ def NetVolumeChange(path, pixelsize, measurementerror):
             maskglobresults = [sorted(glob.glob(path+"*masked.tif"))]
             older = rio.open(maskglobresults[0][0])
             newer = rio.open(maskglobresults[0][num])
-            date1 = (maskglobresults[0][0][-16:-10])
-            date2 = (maskglobresults[0][num][-16:-10])
+            date1 = (maskglobresults[0][0][-18:-10])
+            date2 = (maskglobresults[0][num][-18:-10])
             file = glob.glob(path+date1+date2+'DOD.tif')
             volfile = rio.open(file[0])
             readvolfile = np.array(volfile.read(1))
