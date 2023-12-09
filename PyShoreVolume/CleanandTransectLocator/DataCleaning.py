@@ -87,23 +87,32 @@ def cleaning(intersected, CRS):
 
         dicty = {}
         for e, ids in enumerate(uniquetrans):
-                #Extract the geometries and put into same CRS
+                # if e > 277: 
+                # print(ids, e)
                 s = GeoDataFrame(intersected.loc[intersected['TR_ID'] == ids])
+                # print(s)
+                # s = s.loc[s['Z']== median]
                 s = s.set_geometry('geometry_x')
+                
                 s = s.to_crs(epsg=3857)
+                ##tr - transect geometry point
                 tr = s
                 tr = tr.set_geometry('geometry_y')
                 tr = tr.set_crs(epsg= CRS, allow_override=True)
                 tr = tr.to_crs(epsg=3857)
+                print(tr['geometry_y'], s['geometry_x'])
+                
                 uniquelayer = s['layer'].drop_duplicates()
-                 
+                #print(tr, uniquelayer)      
         
          ####Iterate through the available years taking the intersect closest to baseline first
         
                 for i in uniquelayer:
                     yeardrop = s.loc[s['layer']==i]
                     trs = tr.iloc[0]
+                    
                     dists = yeardrop['geometry_x'].distance(trs['geometry_y'])
+                    
                     gdf1 = intersected.loc[dists.idxmin()]
                     gdf1 = gdf1.T
                     dicty = {}
@@ -115,7 +124,6 @@ def cleaning(intersected, CRS):
         intersectednew = intersectednew.set_geometry('geometry_x') 
         intersectednew = GeoDataFrame(intersectednew[~intersectednew['layer'].isnull()])
         return intersectednew
-        
 
 
 

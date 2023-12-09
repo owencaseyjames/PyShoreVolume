@@ -37,6 +37,7 @@ from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
+from matplotlib_scalebar.scalebar import ScaleBar
 
 import contextily as ctx
 
@@ -68,7 +69,7 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                         
                                 uniquetrans = intersectednew.TR_ID.unique()
                                 for e, ids in enumerate(uniquetrans):
-                                            
+                                    # if ids == val:            
                                         s = intersectednew.loc[intersectednew['TR_ID'] == ids]
                                         s = s.sort_values('layer')
                                         transectsvalx = np.array(s['geometry_x'].x)
@@ -95,17 +96,17 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         seconddata = seconddata.to_crs(CRS)
                                         coordinate1 = (np.array(firstdata['geometry'].y), np.array(firstdata['geometry'].x))
                                         coordinate2 = (np.array(seconddata['geometry'].y), np.array(seconddata['geometry'].x))
+                                        
                                         distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m
                                                                       
                                         #Transform for mapping
                                         firstdata = firstdata.to_crs(3857)
                                         seconddata = seconddata.to_crs(3857)
-
-                                        ##Saves coords and distances in dictionary
+####This dictionary isnt needed >
                                         scedic[ids] = {'First coordinate':coordinate1,'Second coordinate':coordinate2, 
                                                        'Transect':ids,'Distances': distances, 'Newest date': firstyear, 
                                                        'Oldest date':secondyear} 
-                                        
+                                        ##Saves coords and distances in dictionary
                                     
                                         coordx.append(firstdata['geometry'].x)
                                         coordy.append(firstdata['geometry'].y)
@@ -115,7 +116,9 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         distances1.append(distances)
                                         trid.append(ids)
                                         trid.append(ids)
-                                                                         
+                                            
+
+                                
                                 norm = matplotlib.colors.Normalize(vmin = min(distances1), vmax= max(distances1), clip = True)
                                 cmaps= plt.get_cmap('viridis')
                                 c = cmaps(norm(distances1))
@@ -126,12 +129,23 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                     ax.plot(coordx[i:i+2],coordy[i:i+2],marker = None, c=c[i])
                                 for ins in range(0,len(trid),trloc):                    
                                     ax.annotate(trid[ins], (coordx[ins], coordy[ins]))                              
-                                                                
+                                
+                                
                                 divider = make_axes_locatable(ax)
                                 cax = divider.append_axes("right", size="5%", pad=0.05)    
                                 cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax, cax = cax)
                                 cbar.set_label('Change in Meters', rotation=270, fontsize = 13, labelpad = 12)
                                 ctx.add_basemap(ax, source=ctx.providers.Esri.WorldImagery, zoom=15)
+                                
+                                # scalebar = ScaleBar(1,'m')
+                                # ax.add_artist(scalebar)
+                        
+                                # x, y, arrow_length = 0.97, 0.95, 0.05
+                                # ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),
+                                #               arrowprops=dict(facecolor='black', width=5, headwidth=15),
+                                #               ha='center', va='center', fontsize=20,
+                                #               xycoords=ax.transAxes)
+                                
                                 ax.set_title('Shoreline Change Envelope', fontsize=15)
                                 ax.set_ylabel('Latitude', fontsize = 12)
                                 ax.set_xlabel('Longitude', fontsize=12)

@@ -39,7 +39,7 @@ from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.lines import Line2D
-
+from matplotlib_scalebar.scalebar import ScaleBar
 import contextily as ctx
 
 import pyproj
@@ -94,9 +94,11 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                uniquetrans = intersectednew.TR_ID.unique()
                trloc = math.ceil((max(intersectednew['TR_ID'])/transectplot)/2)*2
 
-               for e, ids in enumerate(uniquetrans):        
+               for e, ids in enumerate(uniquetrans):
+                        # print(ids)
+                       # if val == e:             
                           s = GeoDataFrame(intersectednew.loc[intersectednew['TR_ID'] == ids])
-                          
+                          # print(s.columns)ko
                           newestdate = max(s['layer'])
                           oldestdate = min(s['layer'])
                           for i in s['layer']:
@@ -129,6 +131,8 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                           coordinate2 = (np.array(seconddata['geometry'].y), np.array(seconddata['geometry'].x))
                           distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m
                            
+                          
+                            
                           nsmdic[ids] = {'Newest date coords':coordinate1,'Newest date':newestdate, 'Oldest date':oldestdate, \
                                         'Oldest date coords':coordinate2, 'Distances':distances, 'Transect':ids}
                           firstdata = firstdata.to_crs(3857)
@@ -160,12 +164,22 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                cbar = fig.colorbar(cm.ScalarMappable(norm=norm, cmap = cmaps), ax = ax, cax = cax)
                cbar.set_label('Change in Meters', rotation=270,fontsize = 13, labelpad = 12)
                ctx.add_basemap(ax, source=ctx.providers.Esri.WorldImagery, zoom=15)
+               
+               # scalebar = ScaleBar(1,'m')
+               # ax.add_artist(scalebar)
+                
+               # x, y, arrow_length = 0.97, 0.95, 0.05
+               # ax.annotate('N', xy=(x, y), xytext=(x, y-arrow_length),
+               #            arrowprops=dict(facecolor='black', width=5, headwidth=15),
+               #            ha='center', va='center', fontsize=20,
+               #            xycoords=ax.transAxes)
               
                ax.set_title('Net Shoreline Change', fontsize=15)
                ax.set_ylabel('Latitude', fontsize = 12)
                ax.set_xlabel('Longitude', fontsize=12)
                plt.show()         
                fig.savefig(save_to_path+'/netshorelinemovement.png',bbox_inches='tight')
+
 
                with open (save_to_path+'/nsm.pkl', 'wb') as fb:
                    pickle.dump(nsmdic, fb, protocol = pickle.HIGHEST_PROTOCOL)
@@ -174,4 +188,4 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                nsmdic = nsmdic.T
                
                return nsmdic
-               
+               # print( min(distances1), max(distances1)) 
