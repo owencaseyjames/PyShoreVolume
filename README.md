@@ -23,7 +23,7 @@ This package offers the ability to perform 5 well established Shoreline Change A
 | NSMEandA (Net Shoreline Movement Erosion and Accretion) | Net movement between the oldest shoreline position and most recent shoreline position with erosion and accretion trends being identified. | NSM with graphical output of NSM rates on top of satellite Imagery, Dictionary of NSMEandA rates, Pandas DataFrame of Statistics. |
 
 
-The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates  (Carvahlo et al. 2021). In a coastal setting this can allow sediment volumes across the entire shore to measured. The full range of functions are defined below.
+The volumetric change functions are performed on a time series of Digitial Elevation Models, where each pixel in the succeeding DEM is taken away from the prior DEM producing a final DEM of accretion or erosion rates  (Carvahlo et al. 2021). In a coastal setting this can allow sediment volumes across the entire shore to measured. Normalised Gross and Net Crosshore volumetric change rates are calculated according to Burvingt et al., (2017). The full range of functions are defined below.
 
 | Function | Description | Output |
 | --- | --- | --- |
@@ -113,6 +113,7 @@ DEM of Difference Parameters
 | figheight | Height of the plot | Float or integer | 
 | subplotcols | Number of columns to be used in the subplot | Integer | 
 | measurementerror| Instrument error ranges (meters)| Float or Integer |
+| beachlength| Length of the beach (meters)| Float or Integer |
 
 ## Usage
 
@@ -178,7 +179,7 @@ Setting the configurations for the DOD analysis functions.  Note that subplots w
 
 ```
 SauntonDOD = DOD(subplotcols =  2, titlesize =  6, pixelsize = 1, DODCRS = 4326, figwidth = 5,
-figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:4326', measurementerror = 0.15)
+figheight = 10, save_to_path = save_to_path, path = paths, MaskingCRS = 'EPSG:4326', measurementerror = 0.15,  beachlength = 4300)
 
 #Mask the DEM's using 'VolumePoly.shp' file present in the data directory. 
 SauntonDOD.Masking()
@@ -217,6 +218,9 @@ Out:
 H. Burningham and M. Fernandez-Nunez. Shoreline change analysis. Sandy Beach Morphodynam- ics, pages 439–460, 1 2020. doi: 10.1016/B978-0-08-102927-5.00019-9.
  
 R. C. Carvalho, B. Allan, D. M. Kennedy, C. Leach, S. O’Brien, and D. Ierodiaconou. Quan- tifying decadal volumetric changes along sandy beaches using improved historical aerial photographic models and contemporary data. Earth Surface Processes and Landforms, 46(10):1882–1897, 8 2021. ISSN 1096-9837. doi: 10.1002/ESP.5130.
+
+Burvingt, O., Masselink, G., Russell, P., Scott, T., 2017. Classification of beach response to extreme storms. Geomorphology 295, 722–737.469
+doi:10.1016/J.GEOMORPH.2017.07.022.470
 
 # Support 
 
