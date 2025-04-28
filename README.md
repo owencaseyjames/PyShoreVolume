@@ -158,7 +158,7 @@ results = Datacleaning.results()
 Setting the configurations for the SCA analysis functions. An instance of this class can the be created and named after the region under analysis. Select which analysis method to use with this beach configuration. The output dataframes will be saved to the variable name of the users choosing.  
 
 ```
-Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectiondata) 
+Saunton = SCA(ellipsoidal = 'WGS-84', save_to_path = results, transectplot = 10, CRS = 4326, measurementerror = 0.4, georeferencingerror = 0, distancemeasureerror = 0,intersectednew = intersectiondata, intersect_crs = 27700) 
 
 #Shorleine Change Envelope
 SauntonSCE = Saunton.SCE()
