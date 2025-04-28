@@ -59,7 +59,7 @@ import pickle
 
 import math
 
-def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
+def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path, intersect_crs):
                """
                Produces graphical output of Erosion and Accretion distances. 
                 
@@ -135,11 +135,11 @@ def NSMEandA(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
                                                    
                           # print(newdatedatageoms[location[0]][0][0])
                           newdatedatadf = pd.DataFrame(newdatedatageoms)
-                          trannew = GeoDataFrame(newdatedatadf, geometry = gpd.points_from_xy(newdatedatadf[0],newdatedatadf[1]), crs = CRS)
+                          trannew = GeoDataFrame(newdatedatadf, geometry = gpd.points_from_xy(newdatedatadf[0],newdatedatadf[1]), crs = intersect_crs)
                         
                           
                           olddatedatadf = pd.DataFrame(olddatedatageoms)
-                          tranold = GeoDataFrame(olddatedatadf, geometry = gpd.points_from_xy(olddatedatadf[0],olddatedatadf[1]), crs = CRS)
+                          tranold = GeoDataFrame(olddatedatadf, geometry = gpd.points_from_xy(olddatedatadf[0],olddatedatadf[1]), crs = intersect_crs)
 
 
                           firstdata = trannew.to_crs(CRS)

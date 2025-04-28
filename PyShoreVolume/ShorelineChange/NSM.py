@@ -57,7 +57,7 @@ import sys
 
 import math
 
-def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
+def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path, intersect_crs):
                """
                Measures and identifies the maximum distances between the oldest and newest
                dates and plots the results with distance alligned color bar and returns rates
@@ -121,8 +121,8 @@ def NSM(intersectednew, transectplot, CRS, ellipsoidal, save_to_path):
 
                                                                  
                           gpdfirst, gpdsecond = pd.DataFrame({'x':[newdatedatageoms[0,0]],'y':[newdatedatageoms[0,1]]}, columns = ['x','y']), pd.DataFrame({'x':[olddatedatageoms[0,0]],'y':[olddatedatageoms[0,1]]}, columns = ['x','y'])
-                          firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = CRS)
-                          seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = CRS) 
+                          firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = intersect_crs)
+                          seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = intersect_crs) 
                     
                           firstdata = firstdata.to_crs(CRS)
                           seconddata = seconddata.to_crs(CRS)

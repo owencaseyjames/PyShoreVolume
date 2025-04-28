@@ -89,8 +89,8 @@ def transectstartlocator1(baseline, intersectednew):
         val = 0
         for i in baseline['geometry']:
             # print(baseline['geometry'][val].coords[1])
-            x.append(baseline['geometry'][val].coords[1][0])
-            y.append(baseline['geometry'][val].coords[1][1])
+            x.append(baseline['geometry'][val].coords[0][0])
+            y.append(baseline['geometry'][val].coords[0][1])
             trid.append(baseline['TR_ID'][val])
             val = val + 1
         transectgeoms = GeoDataFrame({'X':x,'Y':y,'TR_ID':trid})
@@ -133,8 +133,8 @@ def transectstartlocator2(baseline, intersectednew):
         val = 0
         for i in baseline['geometry']:
             # print(baseline['geometry'][val].coords[0])
-            x.append(baseline['geometry'][val].coords[0][0])
-            y.append(baseline['geometry'][val].coords[0][1])
+            x.append(baseline['geometry'][val].coords[1][0])
+            y.append(baseline['geometry'][val].coords[1][1])
             trid.append(baseline['TR_ID'][val])
             val = val + 1
         transectgeoms = GeoDataFrame({'X':x,'Y':y,'TR_ID':trid})

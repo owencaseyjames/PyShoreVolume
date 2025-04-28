@@ -56,7 +56,7 @@ import sys
 
 import math
 
-def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
+def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path, intersect_crs):
                                 scedic = {}
                                 val = min(intersectednew['TR_ID'])
                                 data = []
@@ -88,15 +88,20 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                         
                                         newdatedatadf= pd.DataFrame({'x':[transectsval[location[0][0]][0]],'y':[transectsval[location[0][0]][1]], 'x1':[transectsval[location[1][0]][0]],\
                                                                      'y1':[transectsval[location[1][0]][1]]}, columns=['x','y','x1','y1'])
-                                        firstdata = GeoDataFrame(geometry = gpd.points_from_xy(newdatedatadf['x'],newdatedatadf['y']), crs = CRS)
-                                        seconddata = GeoDataFrame(geometry = gpd.points_from_xy(newdatedatadf['x1'],newdatedatadf['y1']), crs = CRS)          
-                                        
+                                        firstdata = GeoDataFrame(geometry = gpd.points_from_xy(newdatedatadf['x'],newdatedatadf['y']), crs = intersect_crs)
+                                        seconddata = GeoDataFrame(geometry = gpd.points_from_xy(newdatedatadf['x1'],newdatedatadf['y1']), crs = intersect_crs)          
+                                        print(intersectednew.crs, firstdata.crs)
+                                        print('FIRST:', firstdata)
 
                                         firstdata = firstdata.to_crs(CRS)
                                         seconddata = seconddata.to_crs(CRS)
                                         coordinate1 = (np.array(firstdata['geometry'].y), np.array(firstdata['geometry'].x))
                                         coordinate2 = (np.array(seconddata['geometry'].y), np.array(seconddata['geometry'].x))
                                         
+                                        coordinate1 = np.array([firstdata['geometry'][0].y,firstdata['geometry'][0].x])
+                                        coordinate2 = np.array([seconddata['geometry'][0].y, seconddata['geometry'][0].x])
+                                        
+                                        print('COORDS CHECK:', coordinate1, coordinate2)
                                         distances = geopy.distance.distance(coordinate1,coordinate2, ellipsoid = ellipsoidal).m
                                                                       
                                         #Transform for mapping
@@ -149,9 +154,9 @@ def SCE(intersectednew, transectplot, CRS, ellipsoidal,save_to_path):
                                 ax.set_title('Shoreline Change Envelope', fontsize=15)
                                 ax.set_ylabel('Latitude', fontsize = 12)
                                 ax.set_xlabel('Longitude', fontsize=12)
-                                plt.show()
-                                fig.savefig(save_to_path+'shorleinechangeenvelope.png',bbox_inches='tight')
                                 
+                                fig.savefig(save_to_path+'/shorleinechangeenvelope.png',bbox_inches='tight')
+                                plt.show()
                                 with open (save_to_path+'/scedic.pkl', 'wb') as fb:
                                     pickle.dump(scedic, fb, protocol = pickle.HIGHEST_PROTOCOL)   
                                 

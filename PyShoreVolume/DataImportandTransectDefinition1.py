@@ -25,7 +25,7 @@ class DataImportandTransectDefinition():
         self.path = path
         self.measurementerror = measurementerror
         self.georeferror = georeferror 
-        
+        self.results_folder = None
 
     def transectstartlocator1(self):
         self.intersects = transectstartlocator1(self.transects, self.intersects)
@@ -40,9 +40,14 @@ class DataImportandTransectDefinition():
         return self.intersects
     
     def results(self):
-        directory = 'results/'
-        save_to_path = os.path.join(self.path, directory)  
-        return save_to_path
+        results_folder = os.path.join(self.path, 'results')
+        if not os.path.exists(results_folder):   
+            # os.mk
+            os.makedirs(results_folder)
+            return self.results_folder
+        else: 
+            self.results_folder = results_folder
+            return self.results_folder
     
     def errors(self):
     	##The use of GPD here may raise future erro in which case change to PD.
