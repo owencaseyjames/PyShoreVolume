@@ -58,7 +58,7 @@ import math
 
 gpd.options.display_precision = 10
 
-def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
+def EPR(intersectednew, CRS, save_to_path, ellipsoidal, intersect_crs):
                     """
                     Measures the rates of accretion or erosion throughout time. 
                 
@@ -130,8 +130,8 @@ def EPR(intersectednew, CRS, save_to_path, ellipsoidal):
                             
                             ####this section is to allow the chosen CRS nad ellipsoid to be defined when measuring actual distance. 
                             gpdfirst, gpdsecond = pd.DataFrame({'x':[newdatedatageoms[0,0]],'y':[newdatedatageoms[0,1]]}, columns = ['x','y']), pd.DataFrame({'x':[olddatedatageoms[0,0]],'y':[olddatedatageoms[0,1]]}, columns = ['x','y'])
-                            firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = CRS)
-                            seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = CRS) 
+                            firstdata = GeoDataFrame(gpdfirst, geometry = gpd.points_from_xy(gpdfirst['x'],gpdfirst['y']), crs = intersect_crs)
+                            seconddata = GeoDataFrame(gpdsecond, geometry = gpd.points_from_xy(gpdsecond['x'],gpdsecond['y']), crs = intersect_crs) 
                             
          
                             coordinate1 = (np.array(firstdata['geometry'].y), np.array(firstdata['geometry'].x))
